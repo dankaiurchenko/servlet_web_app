@@ -26,4 +26,12 @@ public class StudentMark extends Entity<Long> implements Serializable {
     public Double getMark() {
         return mark;
     }
+
+    public long getStudentId() {
+        return student.getId();
+    }
+
+    public long getRealizedCourseId() {
+        return realizedCourse.getId();
+    }
 }

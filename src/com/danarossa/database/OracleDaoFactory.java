@@ -1,6 +1,7 @@
 package com.danarossa.database;
 
-import com.danarossa.database.concretedao.*;
+import com.danarossa.database.daointerfaces.ITransaction;
+import com.danarossa.database.oracledao.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -39,6 +40,11 @@ public class OracleDaoFactory implements AbstractDaoFactory {
     @Override
     public StudentMarkDao getStudentMarkDao() {
         return null;
+    }
+
+    @Override
+    public ITransaction getTransaction() {
+        return new Transaction(oracleConnectionPool.getConnection());
     }
 
     @SuppressWarnings("FieldCanBeLocal")

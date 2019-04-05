@@ -38,4 +38,8 @@ public class RealizedCourse extends Entity<Long> implements Serializable {
     public String getStatus() {
         return status;
     }
+
+    public Long getCourseId() {
+        return course.getId();
+    }
 }

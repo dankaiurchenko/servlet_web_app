@@ -1,18 +1,20 @@
 package com.danarossa.database;
 
-import com.danarossa.database.concretedao.*;
+import com.danarossa.database.daointerfaces.*;
 
 
 public interface AbstractDaoFactory {
-    AccountDao getAccountDao();
-    CourseDao getCourseDao();
-    LecturerDao getLecturerDao();
-    RealizedCourseDao getRealizedCourseDao();
-    StudentDao getStudentDao();
-    StudentMarkDao getStudentMarkDao();
+    IAccountDao getAccountDao();
+    ICourseDao getCourseDao();
+    ILecturerDao getLecturerDao();
+    IRealizedCourseDao getRealizedCourseDao();
+    IStudentDao getStudentDao();
+    IStudentMarkDao getStudentMarkDao();
+    default ITransaction getTransaction(){
+        throw  new PersistException("Transaction is not supported");
+    }
 
     static AbstractDaoFactory getDaoFactory(){
         return new OracleDaoFactory();
     }
-
 }

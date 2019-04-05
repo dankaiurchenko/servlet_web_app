@@ -8,7 +8,22 @@ public class Account extends Entity<Long> implements Serializable {
     private String password;
     private String accountType;
     private User user;
-    private Date lastTimeActive;
+    private Date lastTimeActive = new Date();
+
+    public Account(String email, String password, String accountType, User user) {
+        this.email = email;
+        this.password = password;
+        this.accountType = accountType;
+        this.user = user;
+    }
+
+    public Account(Long id, String email, String password, String accountType, User user) {
+        super(id);
+        this.email = email;
+        this.password = password;
+        this.accountType = accountType;
+        this.user = user;
+    }
 
     public Account(Long id, String email, String password, String accountType, User user, Date lastTimeActive) {
         super(id);
@@ -42,5 +57,8 @@ public class Account extends Entity<Long> implements Serializable {
     public Long getUserId() {
         return user.getId();
     }
+
+
+
 
 }

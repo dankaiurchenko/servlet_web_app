@@ -4,12 +4,16 @@ import com.danarossa.entities.Entity;
 
 import java.util.List;
 
-public interface GenericDao<E extends Entity<K>, K> {
-    public abstract List<E> getAll();
-    public abstract E getEntityById(K id);
-    public abstract void update(E entity);
-    public abstract void delete(K id);
-    public abstract void insert(E entity);
-    public abstract K getNextPrimaryKey();
+/**
+ * @param <E> entity type
+ * @param <K>  type of entity's primary key
+ */
+public interface GenericDao<E extends Entity<K>, K> extends AutoCloseable {
+    List<E> getAll();
+    E getEntityById(K id);
+    void update(E entity);
+    void delete(K id);
+    void insert(E entity);
+    K getNextPrimaryKey();
 
 }

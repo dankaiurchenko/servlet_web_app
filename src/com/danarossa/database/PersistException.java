@@ -8,4 +8,7 @@ public class PersistException extends RuntimeException {
         super(message);
     }
 
+    public PersistException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

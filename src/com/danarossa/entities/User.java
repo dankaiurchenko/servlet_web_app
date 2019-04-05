@@ -3,9 +3,9 @@ package com.danarossa.entities;
 import java.util.Date;
 
 public class User extends Entity<Long> {
-    private String name;
-    private String surname;
-    private Date birthday;
+    private String name = "";
+    private String surname = "";
+    private Date birthday = new Date();
 
     public User(Long id) {
         super(id);
