@@ -1,5 +1,6 @@
 package com.danarossa.database.oracledao;
 
+import com.danarossa.database.OracleDaoFactory;
 import com.danarossa.database.PersistException;
 import com.danarossa.database.daointerfaces.GenericDao;
 import com.danarossa.entities.Entity;
@@ -16,10 +17,12 @@ import java.util.List;
  */
 public abstract class AbstractGenericDao<E extends Entity<K>, K> implements GenericDao<E, K> {
 
-    private Connection connection;
+    protected Connection connection;
+    private OracleDaoFactory.OracleConnectionPool connectionPool;
 
-    AbstractGenericDao(Connection connection) {
-        this.connection = connection;
+    AbstractGenericDao(OracleDaoFactory.OracleConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
+        this.connection = connectionPool.getConnection();
         try {
             connection.setAutoCommit(false);
         } catch (SQLException e) {
@@ -76,7 +79,7 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             prepareStatementForUpdate(statement, entity); // заполнение аргументов запроса оставим на совесть потомков
             int count = statement.executeUpdate();
-            if (count != 1) {
+            if (count > 1) {
                 throw new PersistException("On update modify more then 1 record: " + count);
             }
         } catch (Exception e) {
@@ -92,7 +95,7 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             setId(statement, id); // заполнение аргументов запроса оставим на совесть потомков
             int count = statement.executeUpdate();
-            if (count != 1) {
+            if (count > 1) {
                 throw new PersistException("On delete modify more then 1 record: " + count);
             }
         } catch (Exception e) {
@@ -114,7 +117,7 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             prepareStatementForInsert(statement, entity);
             int count = statement.executeUpdate();
-            if (count != 1) {
+            if (count > 1) {
                 throw new PersistException("On persist modify more then 1 record: " + count);
             }
         } catch (Exception e) {
@@ -139,10 +142,21 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
     }
 
     @Override
-    public void close() throws Exception {
-        connection.rollback();
+    public void rollback() {
+        try {
+            connection.rollback();
+        } catch (SQLException e) {
+            throw new PersistException("Error while rolling back", e);
+        }
         System.out.println("Done rollback successfully");
-        this.connection.close();
+    }
+
+
+    @Override
+    public void close() throws Exception {
+//        this.connection.close();
+        connectionPool.releaseConnection(connection);
+        this.connection = null;
         System.out.println("Closed the connection");
     }
 
@@ -171,6 +185,17 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
     protected abstract List<E> parseResultSet(ResultSet rs) throws SQLException;
 
 
-
-
+    List<E> getFromQueryWithId(Long id, String sql) {
+        List<E> list;
+        log(sql,"\ngetFromQueryWithId");
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, id);
+            ResultSet rs = statement.executeQuery();
+            list = parseResultSet(rs);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new PersistException(e);
+        }
+        return list;
+    }
 }

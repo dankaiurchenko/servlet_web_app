@@ -1,5 +1,6 @@
 package com.danarossa.database.oracledao;
 
+import com.danarossa.database.OracleDaoFactory;
 import com.danarossa.database.PersistException;
 import com.danarossa.database.daointerfaces.IStudentDao;
 import com.danarossa.entities.Student;
@@ -19,21 +20,21 @@ public class StudentDao extends AbstractGenericDao<Student, Long> implements ISt
     private static final String DATE_ENTERED = "DATE_ENTERED";
     private static final String TABLE = "STUDENTS";
 
-    public StudentDao(Connection connection) {
-        super(connection);
+    public StudentDao(OracleDaoFactory.OracleConnectionPool connectionPool) {
+        super(connectionPool);
     }
 
     private String getBasicSelectQuery() {
         return "select " + getFieldNames() + " from " + TABLE;
     }
 
-    static String getFieldNames() {
+    private static String getFieldNames() {
         return STUDENT_ID + ", " + NAME + ", " + SURNAME + ", " + BIRTHDAY + ", " + DATE_ENTERED;
     }
 
     @Override
     protected String getSelectByIdQuery() {
-        return getBasicSelectQuery() + " where " + STUDENT_ID + " = 5";
+        return getBasicSelectQuery() + " where " + STUDENT_ID + " = ?";
     }
 
     @Override

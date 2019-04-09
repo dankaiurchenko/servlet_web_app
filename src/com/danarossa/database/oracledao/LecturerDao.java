@@ -1,5 +1,6 @@
 package com.danarossa.database.oracledao;
 
+import com.danarossa.database.OracleDaoFactory;
 import com.danarossa.database.PersistException;
 import com.danarossa.database.daointerfaces.ILecturerDao;
 import com.danarossa.entities.Lecturer;
@@ -20,8 +21,8 @@ public class LecturerDao extends AbstractGenericDao<Lecturer, Long> implements I
     private static final String TABLE = "LECTURERS";
     private static final String LECTURER_NEXT_PRIMARY_KEY = "LECTURER_NEXT_PRIMARY_KEY";
 
-    public LecturerDao(Connection connection) {
-        super(connection);
+    public LecturerDao(OracleDaoFactory.OracleConnectionPool connectionPool) {
+        super(connectionPool);
     }
 
     private String getBasicSelectQuery() {
@@ -120,4 +121,9 @@ public class LecturerDao extends AbstractGenericDao<Lecturer, Long> implements I
                 position, hireDate);
     }
 
+    @Override
+    public List<Lecturer> getAllLecturersForStudent(Long studentId) {
+        String sql = "select " + getFieldsNames() + " from student_lecturers_view where STUDENT_ID = ?";
+        return getFromQueryWithId(studentId,sql);
+    }
 }

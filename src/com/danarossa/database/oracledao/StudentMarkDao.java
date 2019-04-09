@@ -1,5 +1,6 @@
 package com.danarossa.database.oracledao;
 
+import com.danarossa.database.OracleDaoFactory;
 import com.danarossa.database.PersistException;
 import com.danarossa.database.daointerfaces.IStudentMarkDao;
 import com.danarossa.entities.RealizedCourse;
@@ -24,8 +25,8 @@ public class StudentMarkDao extends AbstractGenericDao<StudentMark, Long> implem
     private final String STUDENT_ID = "STUDENT_ID";
     private final String REALIZED_COURSE_ID = "REALIZED_COURSE_ID";
 
-    public StudentMarkDao(Connection connection) {
-        super(connection);
+    public StudentMarkDao(OracleDaoFactory.OracleConnectionPool connectionPool) {
+        super(connectionPool);
     }
 
     private String getBasicSelectQuery() {
@@ -33,13 +34,13 @@ public class StudentMarkDao extends AbstractGenericDao<StudentMark, Long> implem
         String LECTURERS = "LECTURERS";
         String LECTURER_ID = "LECTURER_ID";
         return "select " + STUDENT_COURSE_ID + ", " + MARK + ",\n" +
-                CourseDao.getFieldsNames() +
-                StudentDao.getFieldNames() +
-                RealizedCourseDao.getFieldsNames() +
-                LecturerDao.getFieldsNames() +
-                "from " + STUDENTS_COURSES + " join " + REALIZED_COURSES + " using (" +
+                CourseDao.getFieldsNames() + ", " +
+                " LECTURER_ID, l.NAME, l.SURNAME, l.BIRTHDAY, l.POSITION, l.HIRE_DATE, " +
+                RealizedCourseDao.getFieldsNames() + ", " +
+                " STUDENT_ID, s.NAME, s.SURNAME, s.BIRTHDAY, s.DATE_ENTERED " +
+                " from " + STUDENTS_COURSES + " join " + REALIZED_COURSES + " using (" +
                 REALIZED_COURSE_ID + ")\n" + "  join " + COURSES + " using (" + COURSE_ID + ") join " +
-                STUDENTS + " using(" + STUDENT_ID + ") join " + LECTURERS + " using(" + LECTURER_ID + ") ";
+                STUDENTS + " s using(" + STUDENT_ID + ") join " + LECTURERS + " l using(" + LECTURER_ID + ") ";
     }
 
     @Override
@@ -55,8 +56,8 @@ public class StudentMarkDao extends AbstractGenericDao<StudentMark, Long> implem
     @Override
     protected String getInsertQuery() {
         return "insert into " + STUDENTS_COURSES + "(" + STUDENT_COURSE_ID + ", " +
-                STUDENT_ID + ", " + REALIZED_COURSE_ID + ")" +
-                "values ( ?, ?, ?);";
+                STUDENT_ID + ", " + REALIZED_COURSE_ID + ", " + MARK + ")" +
+                "values ( ?, ?, ?, ?)";
     }
 
     @Override
@@ -67,12 +68,12 @@ public class StudentMarkDao extends AbstractGenericDao<StudentMark, Long> implem
     @Override
     protected String getUpdateQuery() {
         return "update " + STUDENTS + "_" + COURSES + " set " + STUDENT_ID + " = ? , " +
-                REALIZED_COURSE_ID + " = ? where " + STUDENT_COURSE_ID + " = ?";
+                REALIZED_COURSE_ID + " = ?, " + MARK + " = ? where " + STUDENT_COURSE_ID + " = ?";
     }
 
     @Override
     protected String getSelectNextPrimaryKeyQuery() {
-        return "select " + STUDENTS + "_" + COURSES + "_SQ.nextval as " +
+        return "select " + STUDENTS_COURSES + "_SQ.nextval as " +
                 STUDENT_COURSE_NEXT_PRIMARY_KEY + " from dual";
     }
 
@@ -83,7 +84,6 @@ public class StudentMarkDao extends AbstractGenericDao<StudentMark, Long> implem
 
     @Override
     protected void prepareStatementForInsert(PreparedStatement statement, StudentMark entity) throws SQLException {
-//        STUDENT_COURSE_ID, STUDENT_ID, REALIZED_COURSE_ID
         statement.setLong(1, entity.getId());
         setFields(statement, entity,2);
     }
@@ -91,12 +91,13 @@ public class StudentMarkDao extends AbstractGenericDao<StudentMark, Long> implem
     private void setFields(PreparedStatement statement, StudentMark entity, int startIndex) throws SQLException {
         statement.setLong(startIndex, entity.getStudentId());
         statement.setLong(startIndex + 1, entity.getRealizedCourseId());
+        statement.setDouble(startIndex + 2, entity.getMark());
     }
 
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, StudentMark entity) throws SQLException {
         setFields(statement, entity, 1);
-        statement.setLong(3, entity.getId());
+        statement.setLong(4, entity.getId());
     }
 
     @Override
@@ -123,4 +124,15 @@ public class StudentMarkDao extends AbstractGenericDao<StudentMark, Long> implem
         return new StudentMark(id, student, realizedCourse, mark);
     }
 
+    @Override
+    public List<StudentMark> getStudentMarksForRealizedCourse(Long realizedCourseId) {
+        String sql = getBasicSelectQuery() + "where " + REALIZED_COURSE_ID + " = ?";
+        return getFromQueryWithId(realizedCourseId, sql);
+    }
+
+    @Override
+    public List<StudentMark> getStudentMarksForStudent(Long studentId) {
+        String sql = getBasicSelectQuery() + "where " + STUDENT_ID + " = ?";
+        return getFromQueryWithId(studentId, sql);
+    }
 }

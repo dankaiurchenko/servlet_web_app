@@ -1,5 +1,6 @@
 package com.danarossa.database.oracledao;
 
+import com.danarossa.database.OracleDaoFactory;
 import com.danarossa.database.PersistException;
 import com.danarossa.database.daointerfaces.IAccountDao;
 import com.danarossa.entities.Account;
@@ -21,10 +22,42 @@ public class AccountDao extends AbstractGenericDao<Account, Long> implements IAc
     private static final String USER_ID = "USER_ID";
     private static final String LAST_TIME_ACTIVE = "LAST_TIME_ACTIVE";
     private static final String TABLE = "ACCOUNTS";
-    private String ACCOUNT_NEXT_PRIMARY_KEY = "ACCOUNT_NEXT_PRIMARY_KEY";
+    private final String ACCOUNT_NEXT_PRIMARY_KEY = "ACCOUNT_NEXT_PRIMARY_KEY";
+    private final LecturerDao lecturerDao;
+    private final StudentDao studentDao;
 
-    public AccountDao(Connection connection) {
-        super(connection);
+    public AccountDao(OracleDaoFactory.OracleConnectionPool connectionPool) {
+        super(connectionPool);
+        lecturerDao = new LecturerDao(connectionPool);
+        studentDao = new StudentDao( connectionPool);
+    }
+
+    @Override
+    public List<Account> getAll() {
+        List<Account> accounts = super.getAll();
+        if (accounts != null && !accounts.isEmpty()) {
+            for (Account account : accounts){
+                account.setUser(getActualUser(account));
+            }
+        }
+        return accounts;
+    }
+
+    private User getActualUser(Account account) {
+        if (account.getAccountType().equals("student")) {
+            return studentDao.getEntityById(account.getUserId());
+        } else if (account.getAccountType().equals("lecturer")) {
+            return lecturerDao.getEntityById(account.getUserId());
+        } else return account.getUser();
+    }
+
+    @Override
+    public Account getEntityById(Long id) {
+        Account account = super.getEntityById(id);
+        if (account != null) {
+            account.setUser(getActualUser(account));
+        }
+        return account;
     }
 
     @Override

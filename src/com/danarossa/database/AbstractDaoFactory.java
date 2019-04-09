@@ -13,6 +13,7 @@ public interface AbstractDaoFactory {
     default ITransaction getTransaction(){
         throw  new PersistException("Transaction is not supported");
     }
+    default void closeAllConnections(){throw  new PersistException("Closing all connections is not supported");}
 
     static AbstractDaoFactory getDaoFactory(){
         return new OracleDaoFactory();

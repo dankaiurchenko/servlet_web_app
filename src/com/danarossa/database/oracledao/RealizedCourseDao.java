@@ -1,5 +1,6 @@
 package com.danarossa.database.oracledao;
 
+import com.danarossa.database.OracleDaoFactory;
 import com.danarossa.database.PersistException;
 import com.danarossa.database.daointerfaces.IRealizedCourseDao;
 import com.danarossa.entities.Course;
@@ -21,14 +22,14 @@ public class RealizedCourseDao extends AbstractGenericDao<RealizedCourse, Long> 
     private static final String END_DATE = "END_DATE";
     private static final String EXAM_DATE = "EXAM_DATE";
     private static final String STATUS = "STATUS";
+    private static final String LECTURER_ID = "LECTURER_ID";
 
-    public RealizedCourseDao(Connection connection) {
-        super(connection);
+    public RealizedCourseDao(OracleDaoFactory.OracleConnectionPool connectionPool) {
+        super(connectionPool);
     }
 
     private String getBasicSelectQuery() {
         String LECTURERS = "LECTURERS";
-        String LECTURER_ID = "LECTURER_ID";
         return "select " +
                 CourseDao.getFieldsNames() + ",  " +
                 LecturerDao.getFieldsNames() + ", " +
@@ -39,7 +40,7 @@ public class RealizedCourseDao extends AbstractGenericDao<RealizedCourse, Long> 
 
     @Override
     protected String getSelectByIdQuery() {
-        return getSelectQuery() + " where" + REALIZED_COURSE_ID + " = ?";
+        return getSelectQuery() + " where " + REALIZED_COURSE_ID + " = ?";
     }
 
     @Override
@@ -128,6 +129,23 @@ public class RealizedCourseDao extends AbstractGenericDao<RealizedCourse, Long> 
     }
 
 
+    @Override
+    public List<RealizedCourse> getAllRealizedCoursesOfLecturer(Long lecturerId) {
+        String sql = getBasicSelectQuery() + " where " + LECTURER_ID + " = ?";
+        return getFromQueryWithId(lecturerId,sql);
+    }
+
+    @Override
+    public List<RealizedCourse> getAllRealizedCoursesOfStudent(Long studentId) {
+        String sql = getBasicSelectQuery() + " join STUDENTS_COURSES using (REALIZED_COURSE_ID) where STUDENT_ID = ?";
+        return getFromQueryWithId(studentId,sql);
+    }
+
+    @Override
+    public List<RealizedCourse> getAllRealizedCoursesOfCourse(Long courseId) {
+        String sql = getBasicSelectQuery() + " where " + COURSE_ID + " = ?";
+        return getFromQueryWithId(courseId,sql);
+    }
 }
 
 

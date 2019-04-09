@@ -1,5 +1,6 @@
 package com.danarossa.database.oracledao;
 
+import com.danarossa.database.OracleDaoFactory;
 import com.danarossa.database.PersistException;
 import com.danarossa.database.daointerfaces.ITransaction;
 
@@ -9,6 +10,7 @@ import java.sql.SQLException;
 public class Transaction implements ITransaction, AutoCloseable{
 
     private final Connection connection;
+    private OracleDaoFactory.OracleConnectionPool connectionPool;
 
     private AccountDao accountDao = null;
     private CourseDao courseDao = null;
@@ -17,8 +19,9 @@ public class Transaction implements ITransaction, AutoCloseable{
     private StudentDao studentDao = null;
     private StudentMarkDao studentMarkDao = null;
 
-    public Transaction(Connection connection) {
-        this.connection = connection;
+    public Transaction(OracleDaoFactory.OracleConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
+        this.connection = this.connectionPool.getConnection();
     }
 
     @Override
@@ -55,7 +58,7 @@ public class Transaction implements ITransaction, AutoCloseable{
     @Override
     public AccountDao getAccountDao() {
         if(accountDao == null){
-            accountDao = new AccountDao(connection);
+            accountDao = new AccountDao(connectionPool);
         }
         return accountDao;
     }
@@ -63,7 +66,7 @@ public class Transaction implements ITransaction, AutoCloseable{
     @Override
     public CourseDao getCourseDao() {
         if (courseDao == null) {
-            courseDao = new CourseDao(connection);
+            courseDao = new CourseDao(connectionPool);
         }
         return courseDao;
     }
@@ -71,7 +74,7 @@ public class Transaction implements ITransaction, AutoCloseable{
     @Override
     public LecturerDao getLecturerDao() {
         if (lecturerDao == null) {
-            lecturerDao = new LecturerDao(connection);
+            lecturerDao = new LecturerDao(connectionPool);
         }
         return lecturerDao;
     }
@@ -79,7 +82,7 @@ public class Transaction implements ITransaction, AutoCloseable{
     @Override
     public RealizedCourseDao getRealizedCourseDao() {
         if (realizedCourseDao == null) {
-            realizedCourseDao = new RealizedCourseDao(connection);
+            realizedCourseDao = new RealizedCourseDao(connectionPool);
         }
         return realizedCourseDao;
     }
@@ -87,7 +90,7 @@ public class Transaction implements ITransaction, AutoCloseable{
     @Override
     public StudentDao getStudentDao() {
         if (studentDao == null) {
-            studentDao = new StudentDao(connection);
+            studentDao = new StudentDao(connectionPool);
         }
         return studentDao;
     }
@@ -95,13 +98,14 @@ public class Transaction implements ITransaction, AutoCloseable{
     @Override
     public StudentMarkDao getStudentMarkDao() {
         if (studentMarkDao == null) {
-            studentDao = new StudentDao(connection);
+            studentMarkDao = new StudentMarkDao(connectionPool);
         }
         return studentMarkDao;
     }
 
+
     @Override
     public void close() throws Exception {
-        connection.close();
+        connectionPool.releaseConnection(connection);
     }
 }

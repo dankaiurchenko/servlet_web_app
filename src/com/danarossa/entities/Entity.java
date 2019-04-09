@@ -1,9 +1,10 @@
 package com.danarossa.entities;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Entity<K> implements Serializable {
-    protected K id;
+    K id;
 
     Entity() {
     }
@@ -18,5 +19,18 @@ public class Entity<K> implements Serializable {
 
     public void setId(K id){
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Entity<?> entity = (Entity<?>) o;
+        return Objects.equals(id, entity.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
