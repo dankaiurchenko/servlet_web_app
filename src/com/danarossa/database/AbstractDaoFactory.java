@@ -1,6 +1,9 @@
 package com.danarossa.database;
 
-import com.danarossa.database.daointerfaces.*;
+import com.danarossa.database.daointerfaces.ICourseDao;
+import com.danarossa.database.daointerfaces.IRealizedCourseDao;
+import com.danarossa.database.daointerfaces.IStudentMarkDao;
+import com.danarossa.database.daointerfaces.IUserDao;
 
 
 public interface AbstractDaoFactory {
@@ -8,10 +11,6 @@ public interface AbstractDaoFactory {
     IUserDao getUserDao();
     IRealizedCourseDao getRealizedCourseDao();
     IStudentMarkDao getStudentMarkDao();
-    default ITransaction getTransaction(){
-        throw  new PersistException("Transaction is not supported");
-    }
-    default void closeAllConnections(){throw  new PersistException("Closing all connections is not supported");}
 
     static AbstractDaoFactory getDaoFactory(){
         return new OracleDaoFactory();

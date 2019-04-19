@@ -66,7 +66,7 @@ public class UserDaoTest {
         assertNotNull(preInsertedUser);
         assertEquals(testInsertedUser, preInsertedUser);
 
-        User updatedUser = new User(id, "name", "updated1", "updated2","skdjfhksdf", new Date(54),"admin");
+        User updatedUser = new User(id, "name", "updated1", "updated2","Matt", new Date(54),"admin");
         iUserDao.update(updatedUser);
 
         User retrievedUpdatedUser = iUserDao.getEntityById(id);
@@ -89,7 +89,7 @@ public class UserDaoTest {
         List<User> lecturers = iUserDao.getAll();
         assertTrue(lecturers.size() > 0);
         int before = lecturers.size();
-        User user = new User("new", "and newljdfs", "newOne", "new", new Date(2334), "student");
+        User user = new User("new", "and Damon", "newOne", "new", new Date(2334), "student");
         iUserDao.insert(user);
         assertNotNull(user.getId());
         Long newID = user.getId();

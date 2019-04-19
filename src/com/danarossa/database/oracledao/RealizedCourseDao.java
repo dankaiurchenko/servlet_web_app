@@ -17,66 +17,15 @@ import java.util.List;
 public class RealizedCourseDao extends AbstractGenericDao<RealizedCourse, Long> implements IRealizedCourseDao {
 
     private static final String REALIZED_COURSE_NEXT_PRIMARY_KEY = "REALIZED_COURSE_NEXT_PRIMARY_KEY";
-    private static final String COURSE_ID = "COURSE_ID";
     private static final String REALIZED_COURSE_ID = "REALIZED_COURSE_ID";
     private static final String START_DATE = "START_DATE";
     private static final String COURSES_TABLE = "COURSES";
-    private static final String table = "REALIZED_" + COURSES_TABLE;
     private static final String END_DATE = "END_DATE";
     private static final String EXAM_DATE = "EXAM_DATE";
     private static final String STATUS = "STATUS";
-    private static final String LECTURER_ID = "USER_ID";
 
     public RealizedCourseDao(OracleDaoFactory.OracleConnectionPool connectionPool) {
-        super(connectionPool);
-    }
-
-    private String getBasicSelectQuery() {
-        String LECTURERS = "USERS";
-        return "select " +
-                CourseDao.getFieldsNames() + ",  " +
-                UserDao.getFieldsNames() + ", " +
-                getFieldsNames() +
-                " from " + table + " join " + COURSES_TABLE + " using (" + COURSE_ID + ") join " +
-                LECTURERS + " ON LECTURER_ID = USER_ID";
-    }
-
-    @Override
-    protected String getSelectByIdQuery() {
-        return getSelectQuery() + " where " + REALIZED_COURSE_ID + " = ?";
-    }
-
-    @Override
-    protected String getSelectQuery() {
-        return getBasicSelectQuery();
-    }
-
-    @Override
-    protected String getInsertQuery() {
-        return "insert into " + table + "(" + getFieldsNames() + ") values (?, ?, ?, ?, ?, ?)";
-    }
-
-    static String getFieldsNames() {
-        return REALIZED_COURSE_ID + ", " + COURSE_ID + ", " + START_DATE + ", " +
-                END_DATE + ", " + EXAM_DATE + ", " + STATUS;
-    }
-
-    @Override
-    protected String getDeleteQuery() {
-        return "delete from " + table + " where " +
-                REALIZED_COURSE_ID + " = ?";
-    }
-
-    @Override
-    protected String getUpdateQuery() {
-        return "update " + table + " set  " + COURSE_ID + " = ?, " + START_DATE + " = ?, " +
-                END_DATE + " = ?, " + EXAM_DATE + " = ?, " + STATUS + " = ? where " +
-                REALIZED_COURSE_ID + " = ?";
-    }
-
-    @Override
-    protected String getSelectNextPrimaryKeyQuery() {
-        return "select " + table + "_SQ.nextval as " + REALIZED_COURSE_NEXT_PRIMARY_KEY + " from dual";
+        super(connectionPool, "realized_course_sql.properties");
     }
 
     @Override
@@ -134,19 +83,19 @@ public class RealizedCourseDao extends AbstractGenericDao<RealizedCourse, Long> 
 
     @Override
     public List<RealizedCourse> getAllRealizedCoursesOfLecturer(Long lecturerId) {
-        String sql = getBasicSelectQuery() + " where " + LECTURER_ID + " = ?";
+        String sql = sqlQueries.getProperty("select.all.for.lecturer");
         return getFromQueryWithId(lecturerId,sql);
     }
 
     @Override
     public List<RealizedCourse> getAllRealizedCoursesOfStudent(Long studentId) {
-        String sql = getBasicSelectQuery() + " join STUDENTS_COURSES using (REALIZED_COURSE_ID) where STUDENT_ID = ?";
+        String sql = sqlQueries.getProperty("select.all.for.student");
         return getFromQueryWithId(studentId,sql);
     }
 
     @Override
     public List<RealizedCourse> getAllRealizedCoursesOfCourse(Long courseId) {
-        String sql = getBasicSelectQuery() + " where " + COURSE_ID + " = ?";
+        String sql = sqlQueries.getProperty("select.all.for.course");
         return getFromQueryWithId(courseId,sql);
     }
 }

@@ -114,6 +114,7 @@ public class StudentMarkDaoTest {
     @Test
     public void getStudentMarksForRealizedCourse() {
         List<StudentMark> studentMarks = studentMarkDao.getStudentMarksForRealizedCourse(1L);
+        System.out.println(studentMarks);
         assertTrue(studentMarks.size() > 0);
         //TODO
     }

@@ -57,40 +57,8 @@ public class Course extends Entity<Long> implements Serializable {
         return hoursForHomeStudy;
     }
 
-    public User getLecturer() {
-        return lecturer;
-    }
-
     public long getLecturerId() {
         return lecturer.getId();
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setNumberOfCredits(int numberOfCredits) {
-        this.numberOfCredits = numberOfCredits;
-    }
-
-    public void setNumberOfHours(int numberOfHours) {
-        this.numberOfHours = numberOfHours;
-    }
-
-    public void setHoursForLectures(int hoursForLectures) {
-        this.hoursForLectures = hoursForLectures;
-    }
-
-    public void setHoursForPractice(int hoursForPractice) {
-        this.hoursForPractice = hoursForPractice;
-    }
-
-    public void setHoursForHomeStudy(int hoursForHomeStudy) {
-        this.hoursForHomeStudy = hoursForHomeStudy;
-    }
-
-    public void setLecturer(User lecturer) {
-        this.lecturer = lecturer;
     }
 
     @Override

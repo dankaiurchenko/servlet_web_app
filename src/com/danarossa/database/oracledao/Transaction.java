@@ -2,7 +2,7 @@ package com.danarossa.database.oracledao;
 
 import com.danarossa.database.OracleDaoFactory;
 import com.danarossa.database.PersistException;
-import com.danarossa.database.daointerfaces.ITransaction;
+import com.danarossa.database.daointerfaces.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -10,11 +10,10 @@ import java.sql.SQLException;
 public class Transaction implements ITransaction, AutoCloseable{
 
     private final Connection connection;
-    private OracleDaoFactory.OracleConnectionPool connectionPool;
+    private final OracleDaoFactory.OracleConnectionPool connectionPool;
     private CourseDao courseDao = null;
     private UserDao userDao = null;
     private RealizedCourseDao realizedCourseDao = null;
-    private UserDao studentDao = null;
     private StudentMarkDao studentMarkDao = null;
 
     public Transaction(OracleDaoFactory.OracleConnectionPool connectionPool) {
@@ -22,7 +21,6 @@ public class Transaction implements ITransaction, AutoCloseable{
         this.connection = this.connectionPool.getConnection();
     }
 
-    @Override
     public void startTransaction() {
         try {
             connection.setAutoCommit(false);
@@ -32,7 +30,6 @@ public class Transaction implements ITransaction, AutoCloseable{
         }
     }
 
-    @Override
     public void commit() {
         try {
             connection.commit();
@@ -42,7 +39,6 @@ public class Transaction implements ITransaction, AutoCloseable{
         }
     }
 
-    @Override
     public void rollback() {
         try {
             connection.rollback();
@@ -54,41 +50,27 @@ public class Transaction implements ITransaction, AutoCloseable{
 
 
     @Override
-    public CourseDao getCourseDao() {
-        if (courseDao == null) {
-            courseDao = new CourseDao(connectionPool);
-        }
-        return courseDao;
-    }
-
-    @Override
-    public UserDao getUserDao() {
-        if (userDao == null) {
-            userDao = new UserDao(connectionPool);
-        }
-        return userDao;
-    }
-
-    @Override
-    public RealizedCourseDao getRealizedCourseDao() {
-        if (realizedCourseDao == null) {
-            realizedCourseDao = new RealizedCourseDao(connectionPool);
-        }
-        return realizedCourseDao;
-    }
-
-
-    @Override
-    public StudentMarkDao getStudentMarkDao() {
-        if (studentMarkDao == null) {
-            studentMarkDao = new StudentMarkDao(connectionPool);
-        }
-        return studentMarkDao;
-    }
-
-
-    @Override
-    public void close() throws Exception {
+    public void close() {
         connectionPool.releaseConnection(connection);
+    }
+
+    @Override
+    public ICourseDao getCourseDao() {
+        return null;
+    }
+
+    @Override
+    public IUserDao getUserDao() {
+        return null;
+    }
+
+    @Override
+    public IRealizedCourseDao getRealizedCourseDao() {
+        return null;
+    }
+
+    @Override
+    public IStudentMarkDao getStudentMarkDao() {
+        return null;
     }
 }

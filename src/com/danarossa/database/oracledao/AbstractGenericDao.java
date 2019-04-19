@@ -5,11 +5,14 @@ import com.danarossa.database.PersistException;
 import com.danarossa.database.daointerfaces.GenericDao;
 import com.danarossa.entities.Entity;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * @param <E> entity type
@@ -17,10 +20,11 @@ import java.util.List;
  */
 public abstract class AbstractGenericDao<E extends Entity<K>, K> implements GenericDao<E, K> {
 
-    protected Connection connection;
-    private OracleDaoFactory.OracleConnectionPool connectionPool;
+    private Connection connection;
+    private final OracleDaoFactory.OracleConnectionPool connectionPool;
+    Properties sqlQueries;
 
-    AbstractGenericDao(OracleDaoFactory.OracleConnectionPool connectionPool) {
+    AbstractGenericDao(OracleDaoFactory.OracleConnectionPool connectionPool, String SQL_PROPERTIES_FILE) {
         this.connectionPool = connectionPool;
         this.connection = connectionPool.getConnection();
         try {
@@ -29,6 +33,19 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
             e.printStackTrace();
             throw new PersistException("Error while setting autocommit false", e);
         }
+
+        sqlQueries = new Properties();
+        try(InputStream inputStream = getClass().getClassLoader().getResourceAsStream(SQL_PROPERTIES_FILE)){
+            if (inputStream != null) {
+                sqlQueries.load(inputStream);
+            } else {
+                throw new FileNotFoundException("property file '" + SQL_PROPERTIES_FILE + "' not found in the classpath");
+            }
+        }catch (Exception e){
+            throw new PersistException("Unable to open sql queries File", e);
+        }
+
+
     }
 
     @Override
@@ -141,7 +158,6 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
         return newPrimaryKey;
     }
 
-    @Override
     public void rollback() {
         try {
             connection.rollback();
@@ -152,26 +168,37 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
     }
 
 
-    @Override
-    public void close() throws Exception {
+    public void close() {
 //        this.connection.close();
         connectionPool.releaseConnection(connection);
         this.connection = null;
         System.out.println("Closed the connection");
     }
 
-    protected abstract String getSelectByIdQuery();
+    private String getSelectByIdQuery() {
+        return sqlQueries.getProperty("select.by.id");
+    }
 
-    protected abstract String getSelectQuery();
+    private String getSelectQuery() {
+        return sqlQueries.getProperty("select.all");
+    }
 
-    protected abstract String getInsertQuery();
+    private String getInsertQuery() {
+        return sqlQueries.getProperty("insert");
+    }
 
-    protected abstract String getDeleteQuery();
 
-    protected abstract String getUpdateQuery();
+    private String getDeleteQuery() {
+        return sqlQueries.getProperty("delete");
+    }
 
-    protected abstract String getSelectNextPrimaryKeyQuery();
+    private String getUpdateQuery() {
+        return sqlQueries.getProperty("update");
+    }
 
+    private String getSelectNextPrimaryKeyQuery() {
+        return sqlQueries.getProperty("next.primary.key");
+    }
 
     protected abstract void setId(PreparedStatement statement, K id) throws SQLException;
 
@@ -179,11 +206,9 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
 
     protected abstract void prepareStatementForUpdate(PreparedStatement statement, E entity) throws SQLException;
 
-
     protected abstract K parseResultSetForPrimaryKey(ResultSet rs) throws SQLException;
 
     protected abstract List<E> parseResultSet(ResultSet rs) throws SQLException;
-
 
     List<E> getFromQueryWithId(Long id, String sql) {
         List<E> list;
@@ -198,4 +223,5 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
         }
         return list;
     }
+
 }

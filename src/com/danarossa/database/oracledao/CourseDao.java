@@ -14,7 +14,6 @@ import java.util.List;
 
 public class CourseDao extends AbstractGenericDao<Course, Long> implements ICourseDao {
 
-
     private static final String COURSE_ID = "COURSE_ID";
     private static final String TITLE = "TITLE";
     private static final String NUMBER_OF_CREDITS = "NUMBER_OF_CREDITS";
@@ -22,58 +21,10 @@ public class CourseDao extends AbstractGenericDao<Course, Long> implements ICour
     private static final String HOURS_FOR_LECTURES = "HOURS_FOR_LECTURES";
     private static final String HOURS_FOR_PRACTICE = "HOURS_FOR_PRACTICE";
     private static final String HOURS_FOR_HOME_STUDY = "HOURS_FOR_HOME_STUDY";
-    private static final String LECTURER_ID = "LECTURER_ID";
-    private static final String COURSES_TABLE = "COURSES";
     private static final String COURSE_NEXT_PRIMARY_KEY = "COURSE_NEXT_PRIMARY_KEY";
 
     public CourseDao(OracleDaoFactory.OracleConnectionPool connectionPool) {
-        super(connectionPool);
-    }
-
-    @Override
-    protected String getSelectByIdQuery() {
-        return getBasicSelectQuery() + " where " + COURSE_ID + " = ?";
-    }
-
-    private String getBasicSelectQuery() {
-        String lecturersTable = "users";
-        return "select " + getFieldsNames() + ",  " + UserDao.getFieldsNames() +
-                " from " + COURSES_TABLE + " join " + lecturersTable + " on users.user_id = COURSES." + LECTURER_ID ;
-    }
-
-    static String getFieldsNames() {
-        return COURSE_ID + ", " + TITLE + ", " + NUMBER_OF_CREDITS + ", " + NUMBER_OF_HOURS + ", " +
-                HOURS_FOR_LECTURES + ", " + HOURS_FOR_PRACTICE + ", " + HOURS_FOR_HOME_STUDY + ", " +
-                LECTURER_ID;
-    }
-
-    @Override
-    protected String getSelectQuery() {
-        return getBasicSelectQuery();
-    }
-
-    @Override
-    protected String getInsertQuery() {
-        return "insert into courses(" + getFieldsNames() + ")\n" +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    }
-
-    @Override
-    protected String getDeleteQuery() {
-        return "delete  from " + COURSES_TABLE + " where " +
-                COURSE_ID + " = ?";
-    }
-
-    @Override
-    protected String getUpdateQuery() {
-        return "update " + COURSES_TABLE + " set " + TITLE + " =?, " + NUMBER_OF_CREDITS + " = ? , " +
-                NUMBER_OF_HOURS + " = ?, " + HOURS_FOR_LECTURES + " = ?, " + HOURS_FOR_PRACTICE + " = ? ," +
-                HOURS_FOR_HOME_STUDY + " = ?, " + LECTURER_ID + " = ? where " + COURSE_ID + " = ?";
-    }
-
-    @Override
-    protected String getSelectNextPrimaryKeyQuery() {
-        return "select " + COURSES_TABLE + "_SQ.nextval as " + COURSE_NEXT_PRIMARY_KEY + " from dual";
+        super(connectionPool, "course_sql.properties");
     }
 
     @Override
@@ -136,20 +87,13 @@ public class CourseDao extends AbstractGenericDao<Course, Long> implements ICour
 
     @Override
     public List<Course> getAllCoursesOfLecturer(Long lecturerId) {
-        String sql = getBasicSelectQuery() + " where " + LECTURER_ID + " = ?";
+        String sql = sqlQueries.getProperty("select.courses.of.lecturer");
         return getFromQueryWithId(lecturerId, sql);
     }
 
     @Override
     public List<Course> getAllCoursesOfStudent(Long studentId) {
-        String sql = "select " + COURSE_ID + ", " + TITLE + ", " + NUMBER_OF_CREDITS + ", " + NUMBER_OF_HOURS +
-        " , " + HOURS_FOR_LECTURES+ ", " + HOURS_FOR_PRACTICE + ", " + HOURS_FOR_HOME_STUDY + " ,\n" +
-                "    USER_ID, EMAIL, PASSWORD, ROLE, NAME , SURNAME , DATE_ENTERED\n" +
-                "from STUDENTS_COURSES sc \n" +
-                "       join REALIZED_COURSES rc using (realized_course_id)\n" +
-                "       join COURSES c using (course_id)\n" +
-                "       join USERS on user_id= lecturer_id  \n" +
-                "where STUDENT_ID = ?";
+        String sql = sqlQueries.getProperty("select.courses.of.student");
         return getFromQueryWithId(studentId, sql);
     }
 

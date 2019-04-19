@@ -28,10 +28,6 @@ public class RealizedCourse extends Entity<Long> implements Serializable {
         this.status = status;
     }
 
-    public Course getCourse() {
-        return course;
-    }
-
     public Date getStartDate() {
         return startDate;
     }
@@ -50,26 +46,6 @@ public class RealizedCourse extends Entity<Long> implements Serializable {
 
     public Long getCourseId() {
         return course.getId();
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public void setExamDate(Date examDate) {
-        this.examDate = examDate;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     @Override

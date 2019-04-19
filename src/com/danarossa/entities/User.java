@@ -4,12 +4,12 @@ import java.util.Date;
 import java.util.Objects;
 
 public class User extends Entity<Long> {
-    private String name = "";
-    private String surname = "";
-    private String email;
-    private String password;
-    private Date dateEntered;
-    private String role;
+    private String name;
+    private String surname;
+    private final String email;
+    private final String password;
+    private final Date dateEntered;
+    private final String role;
 
     public User(String name, String surname, String email, String password, Date dateEntered, String role) {
         this.name = name;

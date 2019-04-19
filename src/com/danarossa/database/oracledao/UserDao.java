@@ -21,54 +21,13 @@ public class UserDao extends AbstractGenericDao<User, Long> implements IUserDao 
     private static final String PASSWORD = "PASSWORD";
     private static final String SURNAME = "SURNAME";
     private static final String DATE_ENTERED = "DATE_ENTERED";
-    private static final String TABLE = "users";
     private static final String ROLE = "ROLE";
     private static final String USER_NEXT_PRIMARY_KEY = "USER_NEXT_PRIMARY_KEY";
 
     public UserDao(OracleDaoFactory.OracleConnectionPool connectionPool) {
-        super(connectionPool);
+        super(connectionPool, "user_sql.properties");
     }
 
-    private String getBasicSelectQuery() {
-        return "select " + getFieldsNames() + " from " + TABLE;
-    }
-
-    @Override
-    protected String getSelectByIdQuery() {
-        return getBasicSelectQuery() + " where " + USER_ID + " = ?";
-    }
-
-    @Override
-    protected String getSelectQuery() {
-        return getBasicSelectQuery();
-    }
-
-    @Override
-    protected String getInsertQuery() {
-        return "insert into " + TABLE + " (" + getFieldsNames() + " )" +
-                "values (?, ?, ?, ?, ?, ?, ?)";
-    }
-
-    static String getFieldsNames() {
-        return  USER_ID + ", " + EMAIL+ ", " +  PASSWORD+ ", " + NAME+ ", " + SURNAME+ ", " + DATE_ENTERED + ", " + ROLE;
-    }
-
-    @Override
-    protected String getDeleteQuery() {
-        return "delete from " + TABLE + " where " +
-                USER_ID + " = ?";
-    }
-
-    @Override
-    protected String getUpdateQuery() {
-        return "update " + TABLE + " set "+ EMAIL + " = ? , " + PASSWORD + " = ? , "+ NAME + " = ? , " + SURNAME + " = ? , " +
-                DATE_ENTERED + " = ? , " + ROLE + " = ? where " + USER_ID + " = ?";
-    }
-
-    @Override
-    protected String getSelectNextPrimaryKeyQuery() {
-        return "select " + "LECTURERS_STUDENTS_SQ.nextval as " + USER_NEXT_PRIMARY_KEY + " from dual";
-    }
 
     @Override
     protected void setId(PreparedStatement statement, Long id) throws SQLException {
@@ -127,7 +86,7 @@ public class UserDao extends AbstractGenericDao<User, Long> implements IUserDao 
 
     @Override
     public List<User> getAllLecturersForStudent(Long studentId) {
-        String sql = "select " + getFieldsNames() + " from student_lecturers_view where STUDENT_ID = ?";
+        String sql = sqlQueries.getProperty("select.lecturers.for.student");
         return getFromQueryWithId(studentId,sql);
     }
 }

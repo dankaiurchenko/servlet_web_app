@@ -22,14 +22,6 @@ public class StudentMark extends Entity<Long> implements Serializable {
         this.mark = mark;
     }
 
-    public User getStudent() {
-        return student;
-    }
-
-    public RealizedCourse getRealizedCourse() {
-        return realizedCourse;
-    }
-
     public Double getMark() {
         return mark;
     }
@@ -40,18 +32,6 @@ public class StudentMark extends Entity<Long> implements Serializable {
 
     public long getRealizedCourseId() {
         return realizedCourse.getId();
-    }
-
-    public void setStudent(User student) {
-        this.student = student;
-    }
-
-    public void setRealizedCourse(RealizedCourse realizedCourse) {
-        this.realizedCourse = realizedCourse;
-    }
-
-    public void setMark(Double mark) {
-        this.mark = mark;
     }
 
     @Override

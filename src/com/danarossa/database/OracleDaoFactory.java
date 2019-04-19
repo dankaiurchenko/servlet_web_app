@@ -32,7 +32,6 @@ public class OracleDaoFactory implements AbstractDaoFactory {
         return new StudentMarkDao(oracleConnectionPool);
     }
 
-    @Override
     public ITransaction getTransaction() {
         return new Transaction(oracleConnectionPool);
     }
@@ -50,9 +49,9 @@ public class OracleDaoFactory implements AbstractDaoFactory {
     public static class OracleConnectionPool {
         private static final int MAX_POOL_SIZE = 30;
         //TODO
-        private List<Connection> connectionPool = new ArrayList<>(INITIAL_POOL_SIZE);
-        private List<Connection> usedConnections = new ArrayList<>();
-        private static int INITIAL_POOL_SIZE = 10;
+        private final List<Connection> connectionPool = new ArrayList<>(INITIAL_POOL_SIZE);
+        private final List<Connection> usedConnections = new ArrayList<>();
+        private static final int INITIAL_POOL_SIZE = 10;
         private final String DATABASE_URL = "jdbc:oracle:thin:@77.47.220.222:1521:XE";
         private final String DATABASE_USER = "my_servlet_db";
         private final String DATABASE_PASSWORD = "my_servlet_db";
@@ -95,9 +94,9 @@ public class OracleDaoFactory implements AbstractDaoFactory {
             return connection;
         }
 
-        public boolean releaseConnection(Connection connection) {
+        public void releaseConnection(Connection connection) {
             connectionPool.add(connection);
-            return usedConnections.remove(connection);
+            usedConnections.remove(connection);
         }
 
         void shutdown() throws SQLException {
