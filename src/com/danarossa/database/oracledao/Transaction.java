@@ -11,12 +11,10 @@ public class Transaction implements ITransaction, AutoCloseable{
 
     private final Connection connection;
     private OracleDaoFactory.OracleConnectionPool connectionPool;
-
-    private AccountDao accountDao = null;
     private CourseDao courseDao = null;
-    private LecturerDao lecturerDao = null;
+    private UserDao userDao = null;
     private RealizedCourseDao realizedCourseDao = null;
-    private StudentDao studentDao = null;
+    private UserDao studentDao = null;
     private StudentMarkDao studentMarkDao = null;
 
     public Transaction(OracleDaoFactory.OracleConnectionPool connectionPool) {
@@ -56,14 +54,6 @@ public class Transaction implements ITransaction, AutoCloseable{
 
 
     @Override
-    public AccountDao getAccountDao() {
-        if(accountDao == null){
-            accountDao = new AccountDao(connectionPool);
-        }
-        return accountDao;
-    }
-
-    @Override
     public CourseDao getCourseDao() {
         if (courseDao == null) {
             courseDao = new CourseDao(connectionPool);
@@ -72,11 +62,11 @@ public class Transaction implements ITransaction, AutoCloseable{
     }
 
     @Override
-    public LecturerDao getLecturerDao() {
-        if (lecturerDao == null) {
-            lecturerDao = new LecturerDao(connectionPool);
+    public UserDao getUserDao() {
+        if (userDao == null) {
+            userDao = new UserDao(connectionPool);
         }
-        return lecturerDao;
+        return userDao;
     }
 
     @Override
@@ -87,13 +77,6 @@ public class Transaction implements ITransaction, AutoCloseable{
         return realizedCourseDao;
     }
 
-    @Override
-    public StudentDao getStudentDao() {
-        if (studentDao == null) {
-            studentDao = new StudentDao(connectionPool);
-        }
-        return studentDao;
-    }
 
     @Override
     public StudentMarkDao getStudentMarkDao() {

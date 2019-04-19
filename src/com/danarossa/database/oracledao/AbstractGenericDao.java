@@ -83,7 +83,7 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
                 throw new PersistException("On update modify more then 1 record: " + count);
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             throw new PersistException(e);
         }
     }

@@ -4,9 +4,8 @@ import com.danarossa.database.OracleDaoFactory;
 import com.danarossa.database.PersistException;
 import com.danarossa.database.daointerfaces.ICourseDao;
 import com.danarossa.entities.Course;
-import com.danarossa.entities.Lecturer;
+import com.danarossa.entities.User;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,9 +36,9 @@ public class CourseDao extends AbstractGenericDao<Course, Long> implements ICour
     }
 
     private String getBasicSelectQuery() {
-        String lecturersTable = "LECTURERS";
-        return "select " + getFieldsNames() + ",  " + LecturerDao.getFieldsNames() +
-                " from " + COURSES_TABLE + " join " + lecturersTable + " using (" + LECTURER_ID + ")";
+        String lecturersTable = "users";
+        return "select " + getFieldsNames() + ",  " + UserDao.getFieldsNames() +
+                " from " + COURSES_TABLE + " join " + lecturersTable + " on users.user_id = COURSES." + LECTURER_ID ;
     }
 
     static String getFieldsNames() {
@@ -129,7 +128,7 @@ public class CourseDao extends AbstractGenericDao<Course, Long> implements ICour
         int hours_for_lectures = rs.getInt(HOURS_FOR_LECTURES);
         int hours_for_practice = rs.getInt(HOURS_FOR_PRACTICE);
         int hours_for_home_study = rs.getInt(HOURS_FOR_HOME_STUDY);
-        Lecturer lecturer = LecturerDao.parseLecturer(rs);
+        User lecturer = UserDao.parseUser(rs);
         return new Course(course_id, title, number_of_credits,
                 number_of_hours, hours_for_lectures,
                 hours_for_practice, hours_for_home_study, lecturer);
@@ -145,12 +144,11 @@ public class CourseDao extends AbstractGenericDao<Course, Long> implements ICour
     public List<Course> getAllCoursesOfStudent(Long studentId) {
         String sql = "select " + COURSE_ID + ", " + TITLE + ", " + NUMBER_OF_CREDITS + ", " + NUMBER_OF_HOURS +
         " , " + HOURS_FOR_LECTURES+ ", " + HOURS_FOR_PRACTICE + ", " + HOURS_FOR_HOME_STUDY + " ,\n" +
-                "       "+ LECTURER_ID + " , l.name , l.surname , HIRE_DATE, l.BIRTHDAY, POSITION\n" +
-                "from STUDENTS s\n" +
-                "       join STUDENTS_COURSES sc using (student_id)\n" +
+                "    USER_ID, EMAIL, PASSWORD, ROLE, NAME , SURNAME , DATE_ENTERED\n" +
+                "from STUDENTS_COURSES sc \n" +
                 "       join REALIZED_COURSES rc using (realized_course_id)\n" +
                 "       join COURSES c using (course_id)\n" +
-                "       join LECTURERS l using (lecturer_id)\n" +
+                "       join USERS on user_id= lecturer_id  \n" +
                 "where STUDENT_ID = ?";
         return getFromQueryWithId(studentId, sql);
     }

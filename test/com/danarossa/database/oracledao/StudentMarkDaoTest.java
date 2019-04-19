@@ -2,7 +2,10 @@ package com.danarossa.database.oracledao;
 
 import com.danarossa.database.AbstractDaoFactory;
 import com.danarossa.database.daointerfaces.IStudentMarkDao;
-import com.danarossa.entities.*;
+import com.danarossa.entities.Course;
+import com.danarossa.entities.RealizedCourse;
+import com.danarossa.entities.StudentMark;
+import com.danarossa.entities.User;
 import org.junit.*;
 
 import java.util.Date;
@@ -16,7 +19,7 @@ public class StudentMarkDaoTest {
     private static StudentMark studentMark;
     private static Course course;
     private static RealizedCourse realizedCourse;
-    private static Student student;
+    private static User student;
 
     @BeforeClass
     public static void before() {
@@ -24,10 +27,9 @@ public class StudentMarkDaoTest {
         studentMarkDao = oracleDaoFactory.getStudentMarkDao();
         System.out.println("instantiated studentMarkDao");
         id = studentMarkDao.getNextPrimaryKey();
-        Lecturer lecturer = new Lecturer(1L, "newLecturer", "NewOne", new Date(526645), "position", new Date());
-        course = new Course(1L, "newObject", 10, 100, 30, 50, 20, lecturer);
-        realizedCourse = new RealizedCourse(2L, course, new Date(35465), new Date(8788), new Date(), "closed");
-        student = new Student(5L, "name", "surname", new Date(5454545), new Date());
+        course = oracleDaoFactory.getCourseDao().getEntityById(1L);
+        realizedCourse = oracleDaoFactory.getRealizedCourseDao().getEntityById(2L);
+        student = oracleDaoFactory.getUserDao().getEntityById(5L);
         studentMark = new StudentMark(id, student, realizedCourse, 5.0);
     }
 
@@ -43,6 +45,8 @@ public class StudentMarkDaoTest {
 
     @Before
     public void setUp() {
+        System.out.println(studentMark);
+        System.out.println("before insertion   ");
         studentMarkDao.insert(studentMark);
     }
 
@@ -68,7 +72,7 @@ public class StudentMarkDaoTest {
     @Test
     public void update() {
         RealizedCourse newRealizedCourse = new RealizedCourse(3L, course, new Date(35465), new Date(8788), new Date(), "closed");
-        Student newStudent = new Student(6L, "name", "surname", new Date(5454545), new Date());
+        User newStudent = AbstractDaoFactory.getDaoFactory().getUserDao().getEntityById(4L);
         StudentMark studentMark = new StudentMark(id, newStudent, newRealizedCourse, 2.0);
         studentMarkDao.update(studentMark);
         StudentMark studentMark1 = studentMarkDao.getEntityById(id);

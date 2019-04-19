@@ -4,11 +4,9 @@ import com.danarossa.database.daointerfaces.*;
 
 
 public interface AbstractDaoFactory {
-    IAccountDao getAccountDao();
     ICourseDao getCourseDao();
-    ILecturerDao getLecturerDao();
+    IUserDao getUserDao();
     IRealizedCourseDao getRealizedCourseDao();
-    IStudentDao getStudentDao();
     IStudentMarkDao getStudentMarkDao();
     default ITransaction getTransaction(){
         throw  new PersistException("Transaction is not supported");

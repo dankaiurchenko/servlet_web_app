@@ -6,23 +6,29 @@ import java.util.Objects;
 public class User extends Entity<Long> {
     private String name = "";
     private String surname = "";
-    private Date birthday = new Date();
+    private String email;
+    private String password;
+    private Date dateEntered;
+    private String role;
 
-    User(String name, String surname, Date birthday) {
+    public User(String name, String surname, String email, String password, Date dateEntered, String role) {
         this.name = name;
         this.surname = surname;
-        this.birthday = birthday;
+        this.email = email;
+        this.password = password;
+        this.dateEntered = dateEntered;
+        this.role = role;
     }
 
-    public User(Long id) {
-        super(id);
-    }
 
-    User(Long id, String name, String surname, Date birthday) {
+    public User(Long id, String name, String surname, String email, String password, Date dateEntered, String role) {
         super(id);
         this.name = name;
         this.surname = surname;
-        this.birthday = birthday;
+        this.email = email;
+        this.password = password;
+        this.dateEntered = dateEntered;
+        this.role = role;
     }
 
     public String getName() {
@@ -33,20 +39,20 @@ public class User extends Entity<Long> {
         return surname;
     }
 
-    public Date getBirthday() {
-        return birthday;
+    public String getEmail() {
+        return email;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getPassword() {
+        return password;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public Date getDateEntered() {
+        return dateEntered;
     }
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
+    public String getRole() {
+        return role;
     }
 
 
@@ -58,12 +64,15 @@ public class User extends Entity<Long> {
         User user = (User) o;
         return Objects.equals(name, user.name) &&
                 Objects.equals(surname, user.surname) &&
-                Objects.equals(birthday, user.birthday);
+                Objects.equals(email, user.email) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(dateEntered, user.dateEntered) &&
+                Objects.equals(role, user.role);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), name, surname, birthday);
+        return Objects.hash(super.hashCode(), name, surname, email, password, dateEntered, role);
     }
 
     @Override
@@ -71,7 +80,10 @@ public class User extends Entity<Long> {
         return "User{" +
                 "name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
-                ", birthday=" + birthday +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", dateEntered=" + dateEntered +
+                ", role='" + role + '\'' +
                 ", id=" + id +
                 '}';
     }

@@ -4,10 +4,9 @@ import com.danarossa.database.OracleDaoFactory;
 import com.danarossa.database.PersistException;
 import com.danarossa.database.daointerfaces.IStudentMarkDao;
 import com.danarossa.entities.RealizedCourse;
-import com.danarossa.entities.Student;
 import com.danarossa.entities.StudentMark;
+import com.danarossa.entities.User;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,17 +29,14 @@ public class StudentMarkDao extends AbstractGenericDao<StudentMark, Long> implem
     }
 
     private String getBasicSelectQuery() {
-        String REALIZED_COURSES = "REALIZED_COURSES";
-        String LECTURERS = "LECTURERS";
-        String LECTURER_ID = "LECTURER_ID";
-        return "select " + STUDENT_COURSE_ID + ", " + MARK + ",\n" +
-                CourseDao.getFieldsNames() + ", " +
-                " LECTURER_ID, l.NAME, l.SURNAME, l.BIRTHDAY, l.POSITION, l.HIRE_DATE, " +
-                RealizedCourseDao.getFieldsNames() + ", " +
-                " STUDENT_ID, s.NAME, s.SURNAME, s.BIRTHDAY, s.DATE_ENTERED " +
-                " from " + STUDENTS_COURSES + " join " + REALIZED_COURSES + " using (" +
-                REALIZED_COURSE_ID + ")\n" + "  join " + COURSES + " using (" + COURSE_ID + ") join " +
-                STUDENTS + " s using(" + STUDENT_ID + ") join " + LECTURERS + " l using(" + LECTURER_ID + ") ";
+       return "select STUDENT_COURSE_ID, MARK,\n" +
+               "       COURSE_ID, title, NUMBER_OF_CREDITS, NUMBER_OF_HOURS,\n" +
+               "       HOURS_FOR_LECTURES, HOURS_FOR_PRACTICE, HOURS_FOR_HOME_STUDY,\n" +
+               "       s.USER_ID, s.name, s.SURNAME, s.DATE_ENTERED,  s.password, s.email, s.role, \n" +
+               "       l.USER_ID, l.name, l.SURNAME, l.DATE_ENTERED, l.role, l.password, l.email, \n" +
+               "       REALIZED_COURSE_ID, r.START_DATE, r.END_DATE, r.EXAM_DATE, r.STATUS\n" +
+               "from STUDENTS_COURSES join REALIZED_COURSES r using(REALIZED_COURSE_ID) join COURSES using (course_id)\n" +
+               "join users l on courses.LECTURER_ID = l.USER_ID join users s on STUDENTs_COURSEs.student_id = s.USER_ID ";
     }
 
     @Override
@@ -118,7 +114,7 @@ public class StudentMarkDao extends AbstractGenericDao<StudentMark, Long> implem
 
     private StudentMark parseStudentCourse(ResultSet rs) throws SQLException {
         Long id = rs.getLong(STUDENT_COURSE_ID);
-        Student student = StudentDao.parseStudent(rs);
+        User student = UserDao.parseUser(rs);
         RealizedCourse realizedCourse = RealizedCourseDao.parseRealizedCourse(rs);
         Double mark = rs.getDouble(MARK);
         return new StudentMark(id, student, realizedCourse, mark);

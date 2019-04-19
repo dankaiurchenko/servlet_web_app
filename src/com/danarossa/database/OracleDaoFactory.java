@@ -7,36 +7,24 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class OracleDaoFactory implements AbstractDaoFactory {
 
     static private final OracleConnectionPool oracleConnectionPool = new OracleConnectionPool();
-
-    @Override
-    public AccountDao getAccountDao() {
-        return new AccountDao(oracleConnectionPool);
-    }
-
     @Override
     public CourseDao getCourseDao() {
         return new CourseDao(oracleConnectionPool);
     }
 
     @Override
-    public LecturerDao getLecturerDao() {
-        return new LecturerDao(oracleConnectionPool);
+    public UserDao getUserDao() {
+        return new UserDao(oracleConnectionPool);
     }
 
     @Override
     public RealizedCourseDao getRealizedCourseDao() {
         return new RealizedCourseDao(oracleConnectionPool);
-    }
-
-    @Override
-    public StudentDao getStudentDao() {
-        return new StudentDao(oracleConnectionPool);
     }
 
     @Override

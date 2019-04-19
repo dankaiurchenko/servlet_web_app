@@ -4,7 +4,7 @@ import com.danarossa.database.AbstractDaoFactory;
 import com.danarossa.database.daointerfaces.IRealizedCourseDao;
 import com.danarossa.entities.Course;
 import com.danarossa.entities.RealizedCourse;
-import com.danarossa.entities.Lecturer;
+import com.danarossa.entities.User;
 import org.junit.*;
 
 import java.util.Date;
@@ -25,7 +25,7 @@ public class RealizedCourseDaoTest {
         System.out.println("instantiated realizedCourseDao");
         id = realizedCourseDao.getNextPrimaryKey();
 
-        Lecturer lecturer = new Lecturer(1L, "newLecturer", "NewOne", new Date(526645), "position", new Date());
+        User lecturer = new User(1L,"newLecturer", "NewOne", "email", "pass", new Date(526645), "lecturer");
         course = new Course(1L, "newObject", 10, 100, 30, 50, 20, lecturer);
         realizedCourse = new RealizedCourse(id, course, new Date(35465), new Date(8788), new Date(), "closed");
     }

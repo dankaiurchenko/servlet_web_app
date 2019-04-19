@@ -6,7 +6,10 @@ import com.danarossa.database.daointerfaces.IRealizedCourseDao;
 import com.danarossa.entities.Course;
 import com.danarossa.entities.RealizedCourse;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,20 +25,20 @@ public class RealizedCourseDao extends AbstractGenericDao<RealizedCourse, Long> 
     private static final String END_DATE = "END_DATE";
     private static final String EXAM_DATE = "EXAM_DATE";
     private static final String STATUS = "STATUS";
-    private static final String LECTURER_ID = "LECTURER_ID";
+    private static final String LECTURER_ID = "USER_ID";
 
     public RealizedCourseDao(OracleDaoFactory.OracleConnectionPool connectionPool) {
         super(connectionPool);
     }
 
     private String getBasicSelectQuery() {
-        String LECTURERS = "LECTURERS";
+        String LECTURERS = "USERS";
         return "select " +
                 CourseDao.getFieldsNames() + ",  " +
-                LecturerDao.getFieldsNames() + ", " +
+                UserDao.getFieldsNames() + ", " +
                 getFieldsNames() +
                 " from " + table + " join " + COURSES_TABLE + " using (" + COURSE_ID + ") join " +
-                LECTURERS + " using (" + LECTURER_ID + ")";
+                LECTURERS + " ON LECTURER_ID = USER_ID";
     }
 
     @Override

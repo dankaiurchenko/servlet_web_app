@@ -10,9 +10,9 @@ public class Course extends Entity<Long> implements Serializable {
     private int hoursForLectures;
     private int hoursForPractice;
     private int hoursForHomeStudy;
-    private Lecturer lecturer;
+    private User lecturer;
 
-    public Course(String title, int numberOfCredits, int numberOfHours, int hoursForLectures, int hoursForPractice, int hoursForHomeStudy, Lecturer lecturer) {
+    public Course(String title, int numberOfCredits, int numberOfHours, int hoursForLectures, int hoursForPractice, int hoursForHomeStudy, User lecturer) {
         this.title = title;
         this.numberOfCredits = numberOfCredits;
         this.numberOfHours = numberOfHours;
@@ -22,7 +22,7 @@ public class Course extends Entity<Long> implements Serializable {
         this.lecturer = lecturer;
     }
 
-    public Course(Long id, String title, int numberOfCredits, int numberOfHours, int hoursForLectures, int hoursForPractice, int hoursForHomeStudy, Lecturer lecturer) {
+    public Course(Long id, String title, int numberOfCredits, int numberOfHours, int hoursForLectures, int hoursForPractice, int hoursForHomeStudy, User lecturer) {
         super(id);
         this.title = title;
         this.numberOfCredits = numberOfCredits;
@@ -57,7 +57,7 @@ public class Course extends Entity<Long> implements Serializable {
         return hoursForHomeStudy;
     }
 
-    public Lecturer getLecturer() {
+    public User getLecturer() {
         return lecturer;
     }
 
@@ -89,7 +89,7 @@ public class Course extends Entity<Long> implements Serializable {
         this.hoursForHomeStudy = hoursForHomeStudy;
     }
 
-    public void setLecturer(Lecturer lecturer) {
+    public void setLecturer(User lecturer) {
         this.lecturer = lecturer;
     }
 

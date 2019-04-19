@@ -3,7 +3,7 @@ package com.danarossa.database.oracledao;
 import com.danarossa.database.AbstractDaoFactory;
 import com.danarossa.database.daointerfaces.ICourseDao;
 import com.danarossa.entities.Course;
-import com.danarossa.entities.Lecturer;
+import com.danarossa.entities.User;
 import org.junit.*;
 
 import java.util.Date;
@@ -15,7 +15,7 @@ public class CourseDaoTest {
 
     static private ICourseDao courseDao;
     private static Long id;
-    private static Lecturer lecturer;
+    private static User lecturer;
     private static Course course1;
 
     @BeforeClass
@@ -24,7 +24,7 @@ public class CourseDaoTest {
         courseDao = oracleDaoFactory.getCourseDao();
         System.out.println("instantiated courseDao");
         id = courseDao.getNextPrimaryKey();
-        lecturer = new Lecturer(1L,"newLecturer", "NewOne", new Date(526645), "position", new Date());
+        lecturer = new User(1L,"newLecturer", "NewOne", "email", "pass", new Date(526645), "lecturer");
         course1 = new Course(id, "newObject", 10, 100, 30, 50, 20, lecturer);
     }
 
