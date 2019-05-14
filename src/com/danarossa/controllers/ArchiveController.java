@@ -1,4 +1,4 @@
 package com.danarossa.controllers;
 
-public class ArchiveController {
+public class ArchiveController extends ParentController {
 }

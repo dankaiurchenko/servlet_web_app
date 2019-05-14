@@ -1,7 +1,7 @@
-package com.danarossa.database.oracledao;
+package com.danarossa.database.posgres;
 
-import com.danarossa.database.OracleDaoFactory;
 import com.danarossa.database.PersistException;
+import com.danarossa.database.PostgresDabFactory;
 import com.danarossa.database.daointerfaces.*;
 
 import java.sql.Connection;
@@ -10,13 +10,13 @@ import java.sql.SQLException;
 public class Transaction implements ITransaction, AutoCloseable{
 
     private final Connection connection;
-    private final OracleDaoFactory.OracleConnectionPool connectionPool;
+    private final PostgresDabFactory.PostgresConnectionPool connectionPool;
     private CourseDao courseDao = null;
     private UserDao userDao = null;
     private RealizedCourseDao realizedCourseDao = null;
     private StudentMarkDao studentMarkDao = null;
 
-    public Transaction(OracleDaoFactory.OracleConnectionPool connectionPool) {
+    public Transaction(PostgresDabFactory.PostgresConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
         this.connection = this.connectionPool.getConnection();
     }

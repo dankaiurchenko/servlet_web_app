@@ -1,4 +1,4 @@
 package com.danarossa.controllers;
 
-public class LecturerController {
+public class LecturerController  extends ParentController  {
 }

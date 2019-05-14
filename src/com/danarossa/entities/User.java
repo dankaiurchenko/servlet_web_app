@@ -3,7 +3,7 @@ package com.danarossa.entities;
 import java.util.Date;
 import java.util.Objects;
 
-public class User extends Entity<Long> {
+public class User extends Entity<Integer> {
     private String name;
     private String surname;
     private final String email;
@@ -21,7 +21,7 @@ public class User extends Entity<Long> {
     }
 
 
-    public User(Long id, String name, String surname, String email, String password, Date dateEntered, String role) {
+    public User(Integer id, String name, String surname, String email, String password, Date dateEntered, String role) {
         super(id);
         this.name = name;
         this.surname = surname;

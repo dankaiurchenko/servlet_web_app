@@ -4,10 +4,10 @@ import com.danarossa.entities.RealizedCourse;
 
 import java.util.List;
 
-public interface IRealizedCourseDao extends GenericDao<RealizedCourse, Long> {
-    List<RealizedCourse> getAllRealizedCoursesOfLecturer(Long lecturerId);
+public interface IRealizedCourseDao extends GenericDao<RealizedCourse, Integer> {
+    List<RealizedCourse> getAllRealizedCoursesOfLecturer(Integer lecturerId);
 
-    List<RealizedCourse> getAllRealizedCoursesOfStudent(Long studentId);
+    List<RealizedCourse> getAllRealizedCoursesOfStudent(Integer studentId);
 
-    List<RealizedCourse> getAllRealizedCoursesOfCourse(Long courseId);
+    List<RealizedCourse> getAllRealizedCoursesOfCourse(Integer courseId);
 }

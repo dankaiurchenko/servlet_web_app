@@ -1,4 +1,4 @@
 package com.danarossa.controllers;
 
-public class AuthorisationController {
+public class AuthorisationController  extends ParentController {
 }

@@ -1,4 +1,4 @@
-package com.danarossa.database.oracledao;
+package com.danarossa.database.posgres;
 
 import com.danarossa.database.AbstractDaoFactory;
 import com.danarossa.database.daointerfaces.IStudentMarkDao;
@@ -15,7 +15,7 @@ import static junit.framework.TestCase.*;
 
 public class StudentMarkDaoTest {
     static private IStudentMarkDao studentMarkDao;
-    private static Long id;
+    private static Integer id;
     private static StudentMark studentMark;
     private static Course course;
     private static RealizedCourse realizedCourse;
@@ -26,17 +26,15 @@ public class StudentMarkDaoTest {
         AbstractDaoFactory oracleDaoFactory = AbstractDaoFactory.getDaoFactory();
         studentMarkDao = oracleDaoFactory.getStudentMarkDao();
         System.out.println("instantiated studentMarkDao");
-        id = studentMarkDao.getNextPrimaryKey();
-        course = oracleDaoFactory.getCourseDao().getEntityById(1L);
-        realizedCourse = oracleDaoFactory.getRealizedCourseDao().getEntityById(2L);
-        student = oracleDaoFactory.getUserDao().getEntityById(5L);
-        studentMark = new StudentMark(id, student, realizedCourse, 5.0);
+        course = oracleDaoFactory.getCourseDao().getEntityById(1);
+        realizedCourse = oracleDaoFactory.getRealizedCourseDao().getEntityById(2);
+        student = oracleDaoFactory.getUserDao().getEntityById(5);
+        studentMark = new StudentMark(student, realizedCourse.getId(), 5.0);
     }
 
     @AfterClass
     public static void after() {
         try {
-            studentMarkDao.rollback();
             studentMarkDao.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,9 +43,11 @@ public class StudentMarkDaoTest {
 
     @Before
     public void setUp() {
+        studentMark.setId(null);
         System.out.println(studentMark);
         System.out.println("before insertion   ");
         studentMarkDao.insert(studentMark);
+        id = studentMark.getId();
     }
 
     @After
@@ -71,9 +71,9 @@ public class StudentMarkDaoTest {
 
     @Test
     public void update() {
-        RealizedCourse newRealizedCourse = new RealizedCourse(3L, course, new Date(35465), new Date(8788), new Date(), "closed");
-        User newStudent = AbstractDaoFactory.getDaoFactory().getUserDao().getEntityById(4L);
-        StudentMark studentMark = new StudentMark(id, newStudent, newRealizedCourse, 2.0);
+        RealizedCourse newRealizedCourse = new RealizedCourse(3, course.getId(), new Date(35465), new Date(8788), new Date(), "closed");
+        User newStudent = AbstractDaoFactory.getDaoFactory().getUserDao().getEntityById(4);
+        StudentMark studentMark = new StudentMark(id, newStudent, newRealizedCourse.getId(), 2.0);
         studentMarkDao.update(studentMark);
         StudentMark studentMark1 = studentMarkDao.getEntityById(id);
         assertEquals(studentMark, studentMark1);
@@ -93,10 +93,10 @@ public class StudentMarkDaoTest {
     public void insert() {
         List<StudentMark> courses = studentMarkDao.getAll();
         int before = courses.size();
-        StudentMark studentMark1 = new StudentMark(student, realizedCourse, 3.0);
+        StudentMark studentMark1 = new StudentMark(student, realizedCourse.getId(), 3.0);
         studentMarkDao.insert(studentMark1);
         assertNotNull(studentMark1.getId());
-        Long newID = studentMark1.getId();
+        Integer newID = studentMark1.getId();
         assertTrue(studentMark1.getId() != 0);
         assertEquals(before+1, studentMarkDao.getAll().size());
         StudentMark someNewMark = studentMarkDao.getEntityById(newID);
@@ -105,15 +105,8 @@ public class StudentMarkDaoTest {
     }
 
     @Test
-    public void getNextPrimaryKey() {
-        Long firstOne = studentMarkDao.getNextPrimaryKey();
-        Long secondOne = studentMarkDao.getNextPrimaryKey();
-        assertTrue(secondOne > firstOne);
-    }
-
-    @Test
     public void getStudentMarksForRealizedCourse() {
-        List<StudentMark> studentMarks = studentMarkDao.getStudentMarksForRealizedCourse(1L);
+        List<StudentMark> studentMarks = studentMarkDao.getStudentMarksForRealizedCourse(1);
         System.out.println(studentMarks);
         assertTrue(studentMarks.size() > 0);
         //TODO
@@ -122,7 +115,7 @@ public class StudentMarkDaoTest {
     @Test
     public void getStudentMarksForStudent() {
         //TODO
-        List<StudentMark> studentMarks = studentMarkDao.getStudentMarksForStudent(4L);
+        List<StudentMark> studentMarks = studentMarkDao.getStudentMarksForStudent(4);
         assertTrue(studentMarks.size() > 0);
     }
 }

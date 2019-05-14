@@ -1,7 +1,7 @@
-package com.danarossa.database.oracledao;
+package com.danarossa.database.posgres;
 
-import com.danarossa.database.OracleDaoFactory;
 import com.danarossa.database.PersistException;
+import com.danarossa.database.PostgresDabFactory;
 import com.danarossa.database.daointerfaces.IUserDao;
 import com.danarossa.entities.User;
 
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class UserDao extends AbstractGenericDao<User, Long> implements IUserDao {
+public class UserDao extends AbstractGenericDao<User, Integer> implements IUserDao {
 
     private static final String USER_ID = "USER_ID";
     private static final String NAME = "NAME";
@@ -22,28 +22,26 @@ public class UserDao extends AbstractGenericDao<User, Long> implements IUserDao 
     private static final String SURNAME = "SURNAME";
     private static final String DATE_ENTERED = "DATE_ENTERED";
     private static final String ROLE = "ROLE";
-    private static final String USER_NEXT_PRIMARY_KEY = "USER_NEXT_PRIMARY_KEY";
 
-    public UserDao(OracleDaoFactory.OracleConnectionPool connectionPool) {
+    public UserDao(PostgresDabFactory.PostgresConnectionPool connectionPool) {
         super(connectionPool, "user_sql.properties");
     }
 
 
     @Override
-    protected void setId(PreparedStatement statement, Long id) throws SQLException {
-        statement.setLong(1, id);
+    protected void setId(PreparedStatement statement, Integer id) throws SQLException {
+        statement.setInt(1, id);
     }
 
     @Override
     protected void prepareStatementForInsert(PreparedStatement statement, User entity) throws SQLException {
-        statement.setLong(1, entity.getId());
-        setFields(statement, entity, 2);
+        setFields(statement, entity, 1);
     }
 
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, User entity) throws SQLException {
         setFields(statement, entity, 1);
-        statement.setLong(7, entity.getId());
+        statement.setInt(7, entity.getId());
     }
 
 
@@ -58,9 +56,9 @@ public class UserDao extends AbstractGenericDao<User, Long> implements IUserDao 
 
 
     @Override
-    protected Long parseResultSetForPrimaryKey(ResultSet rs) throws SQLException {
+    protected Integer parseResultSetForPrimaryKey(ResultSet rs) throws SQLException {
         if (rs.next()) {
-            return rs.getLong(USER_NEXT_PRIMARY_KEY);
+            return rs.getInt("USER_ID");
         } else throw new PersistException("No value returned!");
     }
 
@@ -74,7 +72,7 @@ public class UserDao extends AbstractGenericDao<User, Long> implements IUserDao 
     }
 
     static User parseUser(ResultSet rs) throws SQLException {
-        Long id = rs.getLong(USER_ID);
+        Integer id = rs.getInt(USER_ID);
         String email = rs.getString(EMAIL);
         String password = rs.getString(PASSWORD);
         String name = rs.getString(NAME);
@@ -85,7 +83,7 @@ public class UserDao extends AbstractGenericDao<User, Long> implements IUserDao 
     }
 
     @Override
-    public List<User> getAllLecturersForStudent(Long studentId) {
+    public List<User> getAllLecturersForStudent(Integer studentId) {
         String sql = sqlQueries.getProperty("select.lecturers.for.student");
         return getFromQueryWithId(studentId,sql);
     }

@@ -1,24 +1,23 @@
 package com.danarossa.entities;
 
 import java.io.Serializable;
-import java.util.Objects;
 
-public class StudentMark extends Entity<Long> implements Serializable {
+public class StudentMark extends Entity<Integer> implements Serializable {
 
     private User student;
-    private RealizedCourse realizedCourse;
+    private Integer realizedCourseId;
     private Double mark;
 
-    public StudentMark(User student, RealizedCourse realizedCourse, Double mark) {
+    public StudentMark(User student, Integer realizedCourse, Double mark) {
         this.student = student;
-        this.realizedCourse = realizedCourse;
+        this.realizedCourseId = realizedCourse;
         this.mark = mark;
     }
 
-    public StudentMark(Long id, User student, RealizedCourse realizedCourse, Double mark) {
+    public StudentMark(Integer id, User student, Integer realizedCourse, Double mark) {
         super(id);
         this.student = student;
-        this.realizedCourse = realizedCourse;
+        this.realizedCourseId = realizedCourse;
         this.mark = mark;
     }
 
@@ -26,37 +25,25 @@ public class StudentMark extends Entity<Long> implements Serializable {
         return mark;
     }
 
-    public long getStudentId() {
+    public Integer getStudentId() {
         return student.getId();
     }
 
-    public long getRealizedCourseId() {
-        return realizedCourse.getId();
+    public User getStudent() {
+        return student;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof StudentMark)) return false;
-        if (!super.equals(o)) return false;
-        StudentMark that = (StudentMark) o;
-        return Objects.equals(student.id, that.student.id) &&
-                Objects.equals(realizedCourse.id, that.realizedCourse.id) &&
-                Objects.equals(mark, that.mark);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), student, realizedCourse, mark);
+    public Integer getRealizedCourseId() {
+        return realizedCourseId;
     }
 
     @Override
     public String toString() {
-        return "StudentMark{  " +
-                id + "   " +
+        return "StudentMark{" +
                 "student=" + student +
-                ", realizedCourse=" + realizedCourse +
+                ", realizedCourseId=" + realizedCourseId +
                 ", mark=" + mark +
+                ", id=" + id +
                 '}';
     }
 }

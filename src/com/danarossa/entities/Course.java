@@ -1,83 +1,60 @@
 package com.danarossa.entities;
 
 import java.io.Serializable;
-import java.util.Objects;
 
-public class Course extends Entity<Long> implements Serializable {
+public class Course extends Entity<Integer> implements Serializable {
     private String title;
-    private int numberOfCredits;
-    private int numberOfHours;
-    private int hoursForLectures;
-    private int hoursForPractice;
-    private int hoursForHomeStudy;
-    private User lecturer;
+    private Integer numberOfHours;
+    private Integer hoursForLectures;
+    private Integer hoursForPractice;
+    private Integer lecturerId;
 
-    public Course(String title, int numberOfCredits, int numberOfHours, int hoursForLectures, int hoursForPractice, int hoursForHomeStudy, User lecturer) {
+    public Course(String title,  Integer numberOfHours, Integer hoursForLectures, Integer hoursForPractice, Integer lecturerId) {
         this.title = title;
-        this.numberOfCredits = numberOfCredits;
         this.numberOfHours = numberOfHours;
         this.hoursForLectures = hoursForLectures;
         this.hoursForPractice = hoursForPractice;
-        this.hoursForHomeStudy = hoursForHomeStudy;
-        this.lecturer = lecturer;
+        this.lecturerId = lecturerId;
     }
 
-    public Course(Long id, String title, int numberOfCredits, int numberOfHours, int hoursForLectures, int hoursForPractice, int hoursForHomeStudy, User lecturer) {
+    public Course(Integer id, String title, Integer numberOfHours, Integer hoursForLectures, Integer hoursForPractice,Integer lecturerId) {
         super(id);
         this.title = title;
-        this.numberOfCredits = numberOfCredits;
         this.numberOfHours = numberOfHours;
         this.hoursForLectures = hoursForLectures;
         this.hoursForPractice = hoursForPractice;
-        this.hoursForHomeStudy = hoursForHomeStudy;
-        this.lecturer = lecturer;
+        this.lecturerId = lecturerId;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public int getNumberOfCredits() {
-        return numberOfCredits;
-    }
-
-    public int getNumberOfHours() {
+    public Integer getNumberOfHours() {
         return numberOfHours;
     }
 
-    public int getHoursForLectures() {
+    public Integer getHoursForLectures() {
         return hoursForLectures;
     }
 
-    public int getHoursForPractice() {
+    public Integer getHoursForPractice() {
         return hoursForPractice;
     }
-
-    public int getHoursForHomeStudy() {
-        return hoursForHomeStudy;
-    }
-
-    public long getLecturerId() {
-        return lecturer.getId();
+    
+    public Integer getLecturerId() {
+        return lecturerId;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        Course course = (Course) o;
-        return numberOfCredits == course.numberOfCredits &&
-                numberOfHours == course.numberOfHours &&
-                hoursForLectures == course.hoursForLectures &&
-                hoursForPractice == course.hoursForPractice &&
-                hoursForHomeStudy == course.hoursForHomeStudy &&
-                Objects.equals(title, course.title) &&
-                Objects.equals(lecturer.id, course.lecturer.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), title, numberOfCredits, numberOfHours, hoursForLectures, hoursForPractice, hoursForHomeStudy, lecturer);
+    public String toString() {
+        return "Course{" +
+                "title='" + title + '\'' +
+                ", numberOfHours=" + numberOfHours +
+                ", hoursForLectures=" + hoursForLectures +
+                ", hoursForPractice=" + hoursForPractice +
+                ", lecturerId=" + lecturerId +
+                ", id=" + id +
+                '}';
     }
 }

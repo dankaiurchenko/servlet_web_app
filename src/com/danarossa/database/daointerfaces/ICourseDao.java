@@ -4,11 +4,11 @@ import com.danarossa.entities.Course;
 
 import java.util.List;
 
-public interface ICourseDao extends GenericDao<Course, Long> {
+public interface ICourseDao extends GenericDao<Course, Integer> {
 
-    List<Course> getAllCoursesOfLecturer(Long lecturerId);
+    List<Course> getAllCoursesOfLecturer(Integer lecturerId);
 
-    List<Course> getAllCoursesOfStudent(Long studentId);
+    List<Course> getAllCoursesOfStudent(Integer studentId);
 
 
 }

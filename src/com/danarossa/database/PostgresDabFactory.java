@@ -1,7 +1,7 @@
 package com.danarossa.database;
 
 import com.danarossa.database.daointerfaces.ITransaction;
-import com.danarossa.database.oracledao.*;
+import com.danarossa.database.posgres.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,36 +9,36 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OracleDaoFactory implements AbstractDaoFactory {
+public class PostgresDabFactory implements AbstractDaoFactory {
 
-    static private final OracleConnectionPool oracleConnectionPool = new OracleConnectionPool();
+    static private final PostgresConnectionPool POSTGRES_CONNECTION_POOL = new PostgresConnectionPool();
     @Override
     public CourseDao getCourseDao() {
-        return new CourseDao(oracleConnectionPool);
+        return new CourseDao(POSTGRES_CONNECTION_POOL);
     }
 
     @Override
     public UserDao getUserDao() {
-        return new UserDao(oracleConnectionPool);
+        return new UserDao(POSTGRES_CONNECTION_POOL);
     }
 
     @Override
     public RealizedCourseDao getRealizedCourseDao() {
-        return new RealizedCourseDao(oracleConnectionPool);
+        return new RealizedCourseDao(POSTGRES_CONNECTION_POOL);
     }
 
     @Override
     public StudentMarkDao getStudentMarkDao() {
-        return new StudentMarkDao(oracleConnectionPool);
+        return new StudentMarkDao(POSTGRES_CONNECTION_POOL);
     }
 
     public ITransaction getTransaction() {
-        return new Transaction(oracleConnectionPool);
+        return new Transaction(POSTGRES_CONNECTION_POOL);
     }
 
     public void closeAllConnections(){
         try {
-            oracleConnectionPool.shutdown();
+            POSTGRES_CONNECTION_POOL.shutdown();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new PersistException("Error while closing connections", e);
@@ -46,18 +46,18 @@ public class OracleDaoFactory implements AbstractDaoFactory {
     }
 
     @SuppressWarnings("FieldCanBeLocal")
-    public static class OracleConnectionPool {
+    public static class PostgresConnectionPool {
         private static final int MAX_POOL_SIZE = 30;
         //TODO
         private final List<Connection> connectionPool = new ArrayList<>(INITIAL_POOL_SIZE);
         private final List<Connection> usedConnections = new ArrayList<>();
         private static final int INITIAL_POOL_SIZE = 10;
-        private final String DATABASE_URL = "jdbc:oracle:thin:@77.47.220.222:1521:XE";
-        private final String DATABASE_USER = "my_servlet_db";
-        private final String DATABASE_PASSWORD = "my_servlet_db";
+        private final String DATABASE_URL = "jdbc:postgresql://localhost:5432/my_servlet_project";
+        private final String DATABASE_USER = "postgres";
+        private final String DATABASE_PASSWORD = "djljghjdjl26";
 
 
-        private OracleConnectionPool() {
+        private PostgresConnectionPool() {
             try {
                 for (int i = 0; i < INITIAL_POOL_SIZE; i++) {
                     connectionPool.add(createConnection());

@@ -13,6 +13,6 @@ public interface AbstractDaoFactory {
     IStudentMarkDao getStudentMarkDao();
 
     static AbstractDaoFactory getDaoFactory(){
-        return new OracleDaoFactory();
+        return new PostgresDabFactory();
     }
 }

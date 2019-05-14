@@ -1,4 +1,4 @@
 package com.danarossa.controllers;
 
-public class HomeController {
+public class HomeController  extends ParentController  {
 }

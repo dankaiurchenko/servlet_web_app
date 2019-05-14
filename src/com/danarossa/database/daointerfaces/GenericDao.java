@@ -14,7 +14,4 @@ public interface GenericDao<E extends Entity<K>, K> extends AutoCloseable {
     void update(E entity);
     void delete(K id);
     void insert(E entity);
-    K getNextPrimaryKey();
-    void rollback();
-
 }

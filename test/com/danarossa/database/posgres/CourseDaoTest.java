@@ -1,4 +1,4 @@
-package com.danarossa.database.oracledao;
+package com.danarossa.database.posgres;
 
 import com.danarossa.database.AbstractDaoFactory;
 import com.danarossa.database.daointerfaces.ICourseDao;
@@ -14,7 +14,7 @@ import static junit.framework.TestCase.*;
 public class CourseDaoTest {
 
     static private ICourseDao courseDao;
-    private static Long id;
+    private static Integer id;
     private static User lecturer;
     private static Course course1;
 
@@ -23,15 +23,13 @@ public class CourseDaoTest {
         AbstractDaoFactory oracleDaoFactory = AbstractDaoFactory.getDaoFactory();
         courseDao = oracleDaoFactory.getCourseDao();
         System.out.println("instantiated courseDao");
-        id = courseDao.getNextPrimaryKey();
-        lecturer = new User(1L,"newLecturer", "NewOne", "email", "pass", new Date(526645), "lecturer");
-        course1 = new Course(id, "newObject", 10, 100, 30, 50, 20, lecturer);
+        lecturer = new User(1,"newLecturer", "NewOne", "email", "pass", new Date(526645), "lecturer");
+        course1 = new Course("newObject", 10, 100, 30,  lecturer.getId());
     }
 
     @AfterClass
     public static void after() {
         try {
-            courseDao.rollback();
             courseDao.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -40,7 +38,9 @@ public class CourseDaoTest {
 
     @Before
     public void setUp() {
+        course1.setId(null);
         courseDao.insert(course1);
+        id = course1.getId();
     }
 
     @After
@@ -64,8 +64,7 @@ public class CourseDaoTest {
 
     @Test
     public void update() {
-        Course courseNew = new Course(id, "updated", 2,
-                1, 1, 1, 1, lecturer);
+        Course courseNew = new Course(id, "updated", 2, 1, 1, lecturer.getId());
         courseDao.update(courseNew);
         Course course = courseDao.getEntityById(id);
         assertEquals(courseNew, course);
@@ -85,10 +84,10 @@ public class CourseDaoTest {
     public void insert() {
         List<Course> courses = courseDao.getAll();
         int before = courses.size();
-        Course newCourse = new Course("newCourse", 2,3,4,5,6,lecturer);
+        Course newCourse = new Course("newCourse", 2,3,4,lecturer.getId());
         courseDao.insert(newCourse);
         assertNotNull(newCourse.getId());
-        Long newID = newCourse.getId();
+        Integer newID = newCourse.getId();
         assertTrue(newCourse.getId() != 0);
         assertEquals(before+1, courseDao.getAll().size());
         Course someNewCourse = courseDao.getEntityById(newID);
@@ -97,22 +96,15 @@ public class CourseDaoTest {
     }
 
     @Test
-    public void getNextPrimaryKey() {
-        Long firstOne = courseDao.getNextPrimaryKey();
-        Long secondOne = courseDao.getNextPrimaryKey();
-        assertTrue(secondOne > firstOne);
-    }
-
-    @Test
     public void getAllCoursesOfLecturer() {
-        List<Course> courses = courseDao.getAllCoursesOfLecturer(1L);
+        List<Course> courses = courseDao.getAllCoursesOfLecturer(1);
         assertTrue(courses.size() > 0);
         //TODO
     }
 
     @Test
     public void getAllCoursesOfStudent() {
-        List<Course> courses = courseDao.getAllCoursesOfStudent(4L);
+        List<Course> courses = courseDao.getAllCoursesOfStudent(4);
         assertTrue(courses.size() > 0);
         //TODO
     }

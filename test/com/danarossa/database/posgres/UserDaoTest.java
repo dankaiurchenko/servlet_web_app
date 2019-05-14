@@ -1,4 +1,4 @@
-package com.danarossa.database.oracledao;
+package com.danarossa.database.posgres;
 
 import com.danarossa.database.AbstractDaoFactory;
 import com.danarossa.database.daointerfaces.IUserDao;
@@ -14,21 +14,19 @@ public class UserDaoTest {
 
     static private IUserDao iUserDao;
     private static User testInsertedUser;
-    private static Long id;
+    private static Integer id;
 
     @BeforeClass
     public static void before() {
         AbstractDaoFactory oracleDaoFactory = AbstractDaoFactory.getDaoFactory();
         iUserDao = oracleDaoFactory.getUserDao();
         System.out.println("instantiated accountDao");
-        id = iUserDao.getNextPrimaryKey();
-        testInsertedUser = new User(id, "name", "surname", "email", "password", new Date(5454545), "student");
+        testInsertedUser = new User("name", "surname", "email", "password", new Date(5454545), "student");
     }
 
     @AfterClass
     public static void after() {
         try {
-            iUserDao.rollback();
             iUserDao.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -37,7 +35,9 @@ public class UserDaoTest {
 
     @Before
     public void setUp() {
+        testInsertedUser.setId(null);
         iUserDao.insert(testInsertedUser);
+        id = testInsertedUser.getId();
     }
 
     @After
@@ -92,7 +92,7 @@ public class UserDaoTest {
         User user = new User("new", "and Damon", "newOne", "new", new Date(2334), "student");
         iUserDao.insert(user);
         assertNotNull(user.getId());
-        Long newID = user.getId();
+        Integer newID = user.getId();
         assertTrue(newID != 0);
         assertEquals(before + 1, iUserDao.getAll().size());
         User retrievedNewUser = iUserDao.getEntityById(newID);
@@ -100,16 +100,10 @@ public class UserDaoTest {
         assertEquals(user, retrievedNewUser);
     }
 
-    @Test
-    public void getNextPrimaryKey() {
-        Long firstOne = iUserDao.getNextPrimaryKey();
-        Long secondOne = iUserDao.getNextPrimaryKey();
-        assertTrue(secondOne > firstOne);
-    }
 
     @Test
     public void getAllLecturersForStudent() {
-        assertTrue(iUserDao.getAllLecturersForStudent(4L).size() > 0);
+        assertTrue(iUserDao.getAllLecturersForStudent(4).size() > 0);
         //TODO
     }
 }

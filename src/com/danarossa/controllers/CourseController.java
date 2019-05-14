@@ -2,6 +2,7 @@ package com.danarossa.controllers;
 
 import com.danarossa.router.Controller;
 
-@Controller()
-public class CourseController {
+@Controller("/courses")
+public class CourseController  extends ParentController {
+
 }

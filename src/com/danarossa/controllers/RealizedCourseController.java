@@ -1,4 +1,4 @@
 package com.danarossa.controllers;
 
-public class RealizedCourseController {
+public class RealizedCourseController  extends ParentController  {
 }
