@@ -2,8 +2,8 @@ package com.danarossa.database.posgres;
 
 import com.danarossa.database.PersistException;
 import com.danarossa.database.PostgresDabFactory;
-import com.danarossa.database.daointerfaces.IUserDao;
 import com.danarossa.entities.User;
+import com.danarossa.router.Role;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class UserDao extends AbstractGenericDao<User, Integer> implements IUserDao {
+public class UserDaoPostgres extends AbstractGenericDao<User, Integer> implements com.danarossa.database.daointerfaces.UserDao {
 
     private static final String USER_ID = "USER_ID";
     private static final String NAME = "NAME";
@@ -21,9 +21,9 @@ public class UserDao extends AbstractGenericDao<User, Integer> implements IUserD
     private static final String PASSWORD = "PASSWORD";
     private static final String SURNAME = "SURNAME";
     private static final String DATE_ENTERED = "DATE_ENTERED";
-    private static final String ROLE = "ROLE";
+    private static final String ROLE = "Role";
 
-    public UserDao(PostgresDabFactory.PostgresConnectionPool connectionPool) {
+    public UserDaoPostgres(PostgresDabFactory.PostgresConnectionPool connectionPool) {
         super(connectionPool, "user_sql.properties");
     }
 
@@ -51,7 +51,7 @@ public class UserDao extends AbstractGenericDao<User, Integer> implements IUserD
         statement.setString(startIndex + 2, entity.getName());
         statement.setString(startIndex + 3, entity.getSurname());
         statement.setTimestamp(startIndex + 4, new Timestamp(entity.getDateEntered().getTime()));
-        statement.setString(startIndex + 5, entity.getRole());
+        statement.setString(startIndex + 5, entity.getRole().toString());
     }
 
 
@@ -78,7 +78,7 @@ public class UserDao extends AbstractGenericDao<User, Integer> implements IUserD
         String name = rs.getString(NAME);
         String surname = rs.getString(SURNAME);
         Date dateEntered = rs.getTimestamp(DATE_ENTERED);
-        String role = rs.getString(ROLE);
+        Role role = Role.valueOf(rs.getString(ROLE));
         return new User(id, name, surname, email, password, dateEntered, role);
     }
 
@@ -86,5 +86,10 @@ public class UserDao extends AbstractGenericDao<User, Integer> implements IUserD
     public List<User> getAllLecturersForStudent(Integer studentId) {
         String sql = sqlQueries.getProperty("select.lecturers.for.student");
         return getFromQueryWithId(studentId,sql);
+    }
+
+    @Override
+    public User getUserByToken(String token) {
+        return null;
     }
 }

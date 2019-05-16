@@ -4,7 +4,7 @@ import com.danarossa.entities.Course;
 
 import java.util.List;
 
-public interface ICourseDao extends GenericDao<Course, Integer> {
+public interface CourseDao extends GenericDao<Course, Integer> {
 
     List<Course> getAllCoursesOfLecturer(Integer lecturerId);
 

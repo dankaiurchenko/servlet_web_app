@@ -1,9 +1,10 @@
 package com.danarossa.database.posgres;
 
 import com.danarossa.database.AbstractDaoFactory;
-import com.danarossa.database.daointerfaces.ICourseDao;
+import com.danarossa.database.daointerfaces.CourseDao;
 import com.danarossa.entities.Course;
 import com.danarossa.entities.User;
+import com.danarossa.router.Role;
 import org.junit.*;
 
 import java.util.Date;
@@ -11,9 +12,9 @@ import java.util.List;
 
 import static junit.framework.TestCase.*;
 
-public class CourseDaoTest {
+public class CourseDaoPostgresTest {
 
-    static private ICourseDao courseDao;
+    static private CourseDao courseDao;
     private static Integer id;
     private static User lecturer;
     private static Course course1;
@@ -23,7 +24,7 @@ public class CourseDaoTest {
         AbstractDaoFactory oracleDaoFactory = AbstractDaoFactory.getDaoFactory();
         courseDao = oracleDaoFactory.getCourseDao();
         System.out.println("instantiated courseDao");
-        lecturer = new User(1,"newLecturer", "NewOne", "email", "pass", new Date(526645), "lecturer");
+        lecturer = new User(1,"newLecturer", "NewOne", "email", "pass", new Date(526645), Role.TRAINER);
         course1 = new Course("newObject", 10, 100, 30,  lecturer.getId());
     }
 

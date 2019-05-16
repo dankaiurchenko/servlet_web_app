@@ -1,16 +1,16 @@
 package com.danarossa.database;
 
-import com.danarossa.database.daointerfaces.ICourseDao;
-import com.danarossa.database.daointerfaces.IRealizedCourseDao;
-import com.danarossa.database.daointerfaces.IStudentMarkDao;
-import com.danarossa.database.daointerfaces.IUserDao;
+import com.danarossa.database.daointerfaces.CourseDao;
+import com.danarossa.database.daointerfaces.RealizedCourseDao;
+import com.danarossa.database.daointerfaces.StudentMarkDao;
+import com.danarossa.database.daointerfaces.UserDao;
 
 
 public interface AbstractDaoFactory {
-    ICourseDao getCourseDao();
-    IUserDao getUserDao();
-    IRealizedCourseDao getRealizedCourseDao();
-    IStudentMarkDao getStudentMarkDao();
+    CourseDao getCourseDao();
+    UserDao getUserDao();
+    RealizedCourseDao getRealizedCourseDao();
+    StudentMarkDao getStudentMarkDao();
 
     static AbstractDaoFactory getDaoFactory(){
         return new PostgresDabFactory();

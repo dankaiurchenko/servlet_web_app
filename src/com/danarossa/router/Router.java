@@ -1,5 +1,7 @@
 package com.danarossa.router;
 
+import com.danarossa.controllers.AuthorisationController;
+import com.danarossa.entities.User;
 import org.reflections.Reflections;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,10 +14,10 @@ import java.util.Set;
 
 public class Router {
 
-//    Map<String, Object> controllers = new HashMap<>();
+    private AuthorisationController authorisationController = new AuthorisationController();
     private Map<String, MyMethod> methods = new HashMap<>();
 
-    public void init() {
+    public Router() {
         final Reflections reflections = new Reflections("com.danarossa.controllers");
         final Set<Class<?>> foundControllers = reflections.getTypesAnnotatedWith(Controller.class);
         for (Class<?> foundController : foundControllers) {
@@ -25,9 +27,12 @@ public class Router {
                 Object controllerInstance = foundController.getConstructor().newInstance();
                 for (Method method : foundController.getMethods()) {
                     Url annotation1 = method.getAnnotation(Url.class);
+                    Accessible accessible = method.getAnnotation(Accessible.class);
                     if (annotation1 != null) {
-                        String path = controllerPath + annotation1.value();
-                        methods.put(path, new MyMethod(controllerInstance, method));
+                        Role[] roles = (accessible == null) ? Role.values() : accessible.value();
+                        String servletPath = "/index.php";
+                        String path = servletPath + controllerPath + annotation1.value();
+                        methods.put(path, new MyMethod(controllerInstance, method, roles));
                     }
                 }
             } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
@@ -37,12 +42,12 @@ public class Router {
     }
 
     public void call(HttpServletRequest request, HttpServletResponse response) {
-        final String queryString = request.getQueryString();
+        User user = authorisationController.getUser(request);
         final String path = request.getPathInfo();
-        System.out.println("queryString   " + queryString);
+        System.out.println("path   " + path);
         methods.forEach((key, value) -> {
             if (path.matches(key)) {
-                value.call(request, response);
+                value.call(request, response, user);
             }
         });
     }

@@ -1,5 +1,7 @@
 package com.danarossa.entities;
 
+import com.danarossa.router.Role;
+
 import java.util.Date;
 import java.util.Objects;
 
@@ -9,9 +11,9 @@ public class User extends Entity<Integer> {
     private final String email;
     private final String password;
     private final Date dateEntered;
-    private final String role;
+    private final Role role;
 
-    public User(String name, String surname, String email, String password, Date dateEntered, String role) {
+    public User(String name, String surname, String email, String password, Date dateEntered, Role role) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -21,7 +23,7 @@ public class User extends Entity<Integer> {
     }
 
 
-    public User(Integer id, String name, String surname, String email, String password, Date dateEntered, String role) {
+    public User(Integer id, String name, String surname, String email, String password, Date dateEntered, Role role) {
         super(id);
         this.name = name;
         this.surname = surname;
@@ -51,7 +53,7 @@ public class User extends Entity<Integer> {
         return dateEntered;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 

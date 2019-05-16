@@ -1,10 +1,11 @@
 package com.danarossa.database.posgres;
 
 import com.danarossa.database.AbstractDaoFactory;
-import com.danarossa.database.daointerfaces.IRealizedCourseDao;
+import com.danarossa.database.daointerfaces.RealizedCourseDao;
 import com.danarossa.entities.Course;
 import com.danarossa.entities.RealizedCourse;
 import com.danarossa.entities.User;
+import com.danarossa.router.Role;
 import org.junit.*;
 
 import java.util.Date;
@@ -12,8 +13,8 @@ import java.util.List;
 
 import static junit.framework.TestCase.*;
 
-public class RealizedCourseDaoTest {
-    static private IRealizedCourseDao realizedCourseDao;
+public class RealizedCourseDaoPostgresPostgresTest {
+    static private RealizedCourseDao realizedCourseDao;
     private static Integer id;
     private static RealizedCourse realizedCourse;
     private static Course course;
@@ -23,7 +24,7 @@ public class RealizedCourseDaoTest {
         AbstractDaoFactory oracleDaoFactory = AbstractDaoFactory.getDaoFactory();
         realizedCourseDao = oracleDaoFactory.getRealizedCourseDao();
         System.out.println("instantiated realizedCourseDao");
-        User lecturer = new User(1,"newLecturer", "NewOne", "email", "pass", new Date(526645), "lecturer");
+        User lecturer = new User(1,"newLecturer", "NewOne", "email", "pass", new Date(526645), Role.TRAINER);
         course = new Course(1, "newObject", 10, 100, 30,  lecturer.getId());
         realizedCourse = new RealizedCourse( course.getId(), new Date(35465), new Date(8788), new Date(), "closed");
     }

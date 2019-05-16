@@ -1,6 +1,6 @@
 package com.danarossa.database;
 
-import com.danarossa.database.daointerfaces.ITransaction;
+import com.danarossa.database.daointerfaces.Transaction;
 import com.danarossa.database.posgres.*;
 
 import java.sql.Connection;
@@ -13,27 +13,27 @@ public class PostgresDabFactory implements AbstractDaoFactory {
 
     static private final PostgresConnectionPool POSTGRES_CONNECTION_POOL = new PostgresConnectionPool();
     @Override
-    public CourseDao getCourseDao() {
-        return new CourseDao(POSTGRES_CONNECTION_POOL);
+    public CourseDaoPostgres getCourseDao() {
+        return new CourseDaoPostgres(POSTGRES_CONNECTION_POOL);
     }
 
     @Override
-    public UserDao getUserDao() {
-        return new UserDao(POSTGRES_CONNECTION_POOL);
+    public UserDaoPostgres getUserDao() {
+        return new UserDaoPostgres(POSTGRES_CONNECTION_POOL);
     }
 
     @Override
-    public RealizedCourseDao getRealizedCourseDao() {
-        return new RealizedCourseDao(POSTGRES_CONNECTION_POOL);
+    public RealizedCourseDaoPostgres getRealizedCourseDao() {
+        return new RealizedCourseDaoPostgres(POSTGRES_CONNECTION_POOL);
     }
 
     @Override
-    public StudentMarkDao getStudentMarkDao() {
-        return new StudentMarkDao(POSTGRES_CONNECTION_POOL);
+    public StudentMarkDaoPostgres getStudentMarkDao() {
+        return new StudentMarkDaoPostgres(POSTGRES_CONNECTION_POOL);
     }
 
-    public ITransaction getTransaction() {
-        return new Transaction(POSTGRES_CONNECTION_POOL);
+    public Transaction getTransaction() {
+        return new TransactionPostgres(POSTGRES_CONNECTION_POOL);
     }
 
     public void closeAllConnections(){
@@ -62,13 +62,14 @@ public class PostgresDabFactory implements AbstractDaoFactory {
                 for (int i = 0; i < INITIAL_POOL_SIZE; i++) {
                     connectionPool.add(createConnection());
                 }
-            } catch (SQLException e) {
+            } catch (SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
                 System.exit(-1);
             }
         }
 
-        private Connection createConnection() throws SQLException {
+        private Connection createConnection() throws SQLException, ClassNotFoundException {
+            Class.forName("org.postgresql.Driver");
             return DriverManager.getConnection(DATABASE_URL,
                     DATABASE_USER, DATABASE_PASSWORD);
         }
@@ -78,7 +79,7 @@ public class PostgresDabFactory implements AbstractDaoFactory {
                 if (usedConnections.size() < MAX_POOL_SIZE) {
                     try {
                         connectionPool.add(createConnection());
-                    } catch (SQLException e) {
+                    } catch (SQLException | ClassNotFoundException e) {
                         e.printStackTrace();
                         System.exit(-1);
                     }

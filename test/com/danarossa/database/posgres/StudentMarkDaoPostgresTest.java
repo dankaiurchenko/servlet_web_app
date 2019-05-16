@@ -1,7 +1,7 @@
 package com.danarossa.database.posgres;
 
 import com.danarossa.database.AbstractDaoFactory;
-import com.danarossa.database.daointerfaces.IStudentMarkDao;
+import com.danarossa.database.daointerfaces.StudentMarkDao;
 import com.danarossa.entities.Course;
 import com.danarossa.entities.RealizedCourse;
 import com.danarossa.entities.StudentMark;
@@ -13,8 +13,8 @@ import java.util.List;
 
 import static junit.framework.TestCase.*;
 
-public class StudentMarkDaoTest {
-    static private IStudentMarkDao studentMarkDao;
+public class StudentMarkDaoPostgresTest {
+    static private StudentMarkDao studentMarkDao;
     private static Integer id;
     private static StudentMark studentMark;
     private static Course course;

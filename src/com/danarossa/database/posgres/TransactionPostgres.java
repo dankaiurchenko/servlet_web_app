@@ -2,21 +2,20 @@ package com.danarossa.database.posgres;
 
 import com.danarossa.database.PersistException;
 import com.danarossa.database.PostgresDabFactory;
-import com.danarossa.database.daointerfaces.*;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class Transaction implements ITransaction, AutoCloseable{
+public class TransactionPostgres implements com.danarossa.database.daointerfaces.Transaction, AutoCloseable{
 
     private final Connection connection;
     private final PostgresDabFactory.PostgresConnectionPool connectionPool;
-    private CourseDao courseDao = null;
-    private UserDao userDao = null;
-    private RealizedCourseDao realizedCourseDao = null;
-    private StudentMarkDao studentMarkDao = null;
+    private CourseDaoPostgres courseDaoPostgres = null;
+    private UserDaoPostgres userDaoPostgres = null;
+    private RealizedCourseDaoPostgres realizedCourseDaoPostgres = null;
+    private StudentMarkDaoPostgres studentMarkDaoPostgres = null;
 
-    public Transaction(PostgresDabFactory.PostgresConnectionPool connectionPool) {
+    public TransactionPostgres(PostgresDabFactory.PostgresConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
         this.connection = this.connectionPool.getConnection();
     }
@@ -55,22 +54,22 @@ public class Transaction implements ITransaction, AutoCloseable{
     }
 
     @Override
-    public ICourseDao getCourseDao() {
+    public com.danarossa.database.daointerfaces.CourseDao getCourseDao() {
         return null;
     }
 
     @Override
-    public IUserDao getUserDao() {
+    public com.danarossa.database.daointerfaces.UserDao getUserDao() {
         return null;
     }
 
     @Override
-    public IRealizedCourseDao getRealizedCourseDao() {
+    public com.danarossa.database.daointerfaces.RealizedCourseDao getRealizedCourseDao() {
         return null;
     }
 
     @Override
-    public IStudentMarkDao getStudentMarkDao() {
+    public com.danarossa.database.daointerfaces.StudentMarkDao getStudentMarkDao() {
         return null;
     }
 }

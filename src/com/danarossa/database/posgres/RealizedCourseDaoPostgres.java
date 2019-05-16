@@ -2,7 +2,6 @@ package com.danarossa.database.posgres;
 
 import com.danarossa.database.PersistException;
 import com.danarossa.database.PostgresDabFactory;
-import com.danarossa.database.daointerfaces.IRealizedCourseDao;
 import com.danarossa.entities.RealizedCourse;
 
 import java.sql.PreparedStatement;
@@ -13,10 +12,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class RealizedCourseDao extends AbstractGenericDao<RealizedCourse, Integer> implements IRealizedCourseDao {
+public class RealizedCourseDaoPostgres extends AbstractGenericDao<RealizedCourse, Integer> implements com.danarossa.database.daointerfaces.RealizedCourseDao {
 
 
-    public RealizedCourseDao(PostgresDabFactory.PostgresConnectionPool connectionPool) {
+    public RealizedCourseDaoPostgres(PostgresDabFactory.PostgresConnectionPool connectionPool) {
         super(connectionPool, "realized_course_sql.properties");
     }
 

@@ -2,7 +2,6 @@ package com.danarossa.database.posgres;
 
 import com.danarossa.database.PersistException;
 import com.danarossa.database.PostgresDabFactory;
-import com.danarossa.database.daointerfaces.IStudentMarkDao;
 import com.danarossa.entities.StudentMark;
 import com.danarossa.entities.User;
 
@@ -12,10 +11,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StudentMarkDao extends AbstractGenericDao<StudentMark, Integer> implements IStudentMarkDao {
+public class StudentMarkDaoPostgres extends AbstractGenericDao<StudentMark, Integer> implements com.danarossa.database.daointerfaces.StudentMarkDao {
     private final String STUDENTS = "STUDENTS";
 
-    public StudentMarkDao(PostgresDabFactory.PostgresConnectionPool connectionPool) {
+    public StudentMarkDaoPostgres(PostgresDabFactory.PostgresConnectionPool connectionPool) {
         super(connectionPool, "student_mark_sql.properties");
     }
 
@@ -61,7 +60,7 @@ public class StudentMarkDao extends AbstractGenericDao<StudentMark, Integer> imp
         String COURSE_ID = "COURSE_ID";
         String STUDENT_COURSE_ID = "STUDENT_" + COURSE_ID;
         Integer id = rs.getInt(STUDENT_COURSE_ID);
-        User student = UserDao.parseUser(rs);
+        User student = UserDaoPostgres.parseUser(rs);
         Integer realizedCourseId = rs.getInt("realized_course_id");
         Double mark = rs.getDouble("MARK");
         return new StudentMark(id, student, realizedCourseId, mark);

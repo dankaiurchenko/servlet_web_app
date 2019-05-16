@@ -4,7 +4,7 @@ import com.danarossa.entities.StudentMark;
 
 import java.util.List;
 
-public interface IStudentMarkDao extends GenericDao<StudentMark, Integer> {
+public interface StudentMarkDao extends GenericDao<StudentMark, Integer> {
 
     List<StudentMark> getStudentMarksForRealizedCourse(Integer realizedCourseId);
 
