@@ -77,4 +77,30 @@ public class StudentMarkDaoPostgres extends AbstractGenericDao<StudentMark, Inte
         String sql = sqlQueries.getProperty("select.all.for.student");
         return getFromQueryWithId(studentId, sql);
     }
+
+
+    @Override
+    public StudentMark getStudentMarkForStudentAndRealizedCourse(Integer studentId, Integer realizedCourseId) {
+        List<StudentMark> list;
+        String sql = sqlQueries.getProperty("select.mark.for.student.for.realized.course");
+        log(sql, "LOG SelectByIdQuery");
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+           statement.setInt(1, studentId);
+           statement.setInt(2, realizedCourseId);
+            ResultSet rs = statement.executeQuery();
+            list = parseResultSet(rs);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new PersistException(e);
+        }
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        if (list.size() > 1) {
+            throw new PersistException("Received more than one record.");
+        }
+        return list.iterator().next();
+    }
 }
+
+

@@ -35,23 +35,24 @@ public class UserDaoPostgres extends AbstractGenericDao<User, Integer> implement
 
     @Override
     protected void prepareStatementForInsert(PreparedStatement statement, User entity) throws SQLException {
-        setFields(statement, entity, 1);
+        setFields(statement, entity);
     }
 
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, User entity) throws SQLException {
-        setFields(statement, entity, 1);
-        statement.setInt(7, entity.getId());
+        setFields(statement, entity);
+        statement.setString(7, entity.getToken());
+        statement.setInt(8, entity.getId());
     }
 
 
-    private void setFields(PreparedStatement statement, User entity, int startIndex) throws SQLException {
-        statement.setString(startIndex, entity.getEmail());
-        statement.setString(startIndex + 1, entity.getPassword());
-        statement.setString(startIndex + 2, entity.getName());
-        statement.setString(startIndex + 3, entity.getSurname());
-        statement.setTimestamp(startIndex + 4, new Timestamp(entity.getDateEntered().getTime()));
-        statement.setString(startIndex + 5, entity.getRole().toString());
+    private void setFields(PreparedStatement statement, User entity) throws SQLException {
+        statement.setString(1, entity.getEmail());
+        statement.setString(2, entity.getPassword());
+        statement.setString(3, entity.getName());
+        statement.setString(4, entity.getSurname());
+        statement.setTimestamp(5, new Timestamp(entity.getDateEntered().getTime()));
+        statement.setString(6, entity.getRole().toString());
     }
 
 
@@ -85,11 +86,54 @@ public class UserDaoPostgres extends AbstractGenericDao<User, Integer> implement
     @Override
     public List<User> getAllLecturersForStudent(Integer studentId) {
         String sql = sqlQueries.getProperty("select.lecturers.for.student");
-        return getFromQueryWithId(studentId,sql);
+        return getFromQueryWithId(studentId, sql);
     }
 
     @Override
     public User getUserByToken(String token) {
-        return null;
+        String sql = sqlQueries.getProperty("select.by.token");
+        return getUniqueFromString(token, sql);
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        String sql = sqlQueries.getProperty("select.by.email");
+        return getUniqueFromString(email, sql);
+    }
+
+    @Override
+    public User getUserByEmailAndPass(String email, String password) {
+        List<User> list;
+        String sql = sqlQueries.getProperty("select.by.email.and.pass");
+        log(sql, "LOG SelectByIdQuery");
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1,email);
+            statement.setString(2,password);
+            ResultSet rs = statement.executeQuery();
+            list = parseResultSet(rs);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new PersistException(e);
+        }
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        if (list.size() > 1) {
+            throw new PersistException("Received more than one record.");
+        }
+        return list.iterator().next();
+    }
+
+    @Override
+    public List<User> getAllOfRole(Role role) {
+        String sql = sqlQueries.getProperty("select.all.with.role");
+        return getFromQueryWithString(role.name(), sql);
+    }
+
+    @Override
+    public List<User> getAllStudentsOfRealizedCourse(Integer realizedCourseId) {
+        String sql = sqlQueries.getProperty("select.students.of.realized.course");
+        return getFromQueryWithId(realizedCourseId, sql);
     }
 }
+

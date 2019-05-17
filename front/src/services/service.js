@@ -4,9 +4,9 @@ export default new class Service{
     getUser() {
         const token = localStorage.getItem('token');
         return axios.get('/api/user', {
-            headers: {
-                'Authorization': 'Bearer ' + token
-            }
+            // headers: {
+            //     'Authorization': 'Bearer ' + token
+            // }
         }).then(function (response) {
             return response.data;
         }).catch(function (error) {
@@ -16,9 +16,9 @@ export default new class Service{
     getUserTasks() {
         const token = localStorage.getItem('token');
         return axios.get('/api/user/task', {
-            headers: {
-                'Authorization': 'Bearer ' + token
-            }
+            // headers: {
+            //     'Authorization': 'Bearer ' + token
+            // }
         }).then(response => {
             return response;
         }).catch(function (error) {

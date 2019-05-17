@@ -15,11 +15,6 @@ class MyMethod {
     private Method method;
     private ArrayList<Role> roles = new ArrayList<>();
 
-    MyMethod(Object controller, Method method) {
-        this.controller = controller;
-        this.method = method;
-    }
-
     MyMethod(Object controller, Method method, Role[] roles) {
         this.controller = controller;
         this.method = method;
@@ -36,6 +31,8 @@ class MyMethod {
             e.printStackTrace();
         }
     }
+
+
 
 
 }

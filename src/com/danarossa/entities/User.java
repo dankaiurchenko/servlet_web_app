@@ -1,27 +1,21 @@
 package com.danarossa.entities;
 
 import com.danarossa.router.Role;
+import com.google.gson.annotations.Expose;
+import lombok.Data;
 
 import java.util.Date;
-import java.util.Objects;
 
+@Data
 public class User extends Entity<Integer> {
     private String name;
     private String surname;
-    private final String email;
-    private final String password;
-    private final Date dateEntered;
-    private final Role role;
-
-    public User(String name, String surname, String email, String password, Date dateEntered, Role role) {
-        this.name = name;
-        this.surname = surname;
-        this.email = email;
-        this.password = password;
-        this.dateEntered = dateEntered;
-        this.role = role;
-    }
-
+    private String email;
+    @Expose(serialize = false)
+    private String password;
+    private Date dateEntered;
+    private Role role;
+    private String token;
 
     public User(Integer id, String name, String surname, String email, String password, Date dateEntered, Role role) {
         super(id);
@@ -32,6 +26,26 @@ public class User extends Entity<Integer> {
         this.dateEntered = dateEntered;
         this.role = role;
     }
+
+    public User(String name, String surname, String email, Date dateEntered, Role role, String token) {
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.dateEntered = dateEntered;
+        this.role = role;
+        this.token = token;
+    }
+
+    public User(String name, String surname, String email, String password, Date dateEntered, Role role, String token) {
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.password = password;
+        this.dateEntered = dateEntered;
+        this.role = role;
+        this.token = token;
+    }
+
 
     public String getName() {
         return name;
@@ -57,36 +71,35 @@ public class User extends Entity<Integer> {
         return role;
     }
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        if (!super.equals(o)) return false;
-        User user = (User) o;
-        return Objects.equals(name, user.name) &&
-                Objects.equals(surname, user.surname) &&
-                Objects.equals(email, user.email) &&
-                Objects.equals(password, user.password) &&
-                Objects.equals(dateEntered, user.dateEntered) &&
-                Objects.equals(role, user.role);
+    public String getToken() {
+        return token;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), name, surname, email, password, dateEntered, role);
+    public void setName(String name) {
+        this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", dateEntered=" + dateEntered +
-                ", role='" + role + '\'' +
-                ", id=" + id +
-                '}';
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setDateEntered(Date dateEntered) {
+        this.dateEntered = dateEntered;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

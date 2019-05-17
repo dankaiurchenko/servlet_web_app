@@ -20,7 +20,7 @@ import java.util.Properties;
  */
 public abstract class AbstractGenericDao<E extends Entity<K>, K> implements GenericDao<E, K> {
 
-    private Connection connection;
+    Connection connection;
     private final PostgresDabFactory.PostgresConnectionPool connectionPool;
     Properties sqlQueries;
 
@@ -76,7 +76,7 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
         return list.iterator().next();
     }
 
-    private void log(String sql, String msg) {
+    void log(String sql, String msg) {
         System.out.println(msg);
         System.out.println(sql);
     }
@@ -118,7 +118,6 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
         if (entity.getId() != null) {
             throw new PersistException("Object is already persist.");
         }
-        // Добавляем запись
         String sql = getInsertQuery();
         log(sql, "LOG InsertQuery");
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -131,17 +130,7 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
         }
     }
 
-    public void rollback() {
-        try {
-            connection.rollback();
-        } catch (SQLException e) {
-            throw new PersistException("Error while rolling back", e);
-        }
-        System.out.println("Done rollback successfully");
-    }
-
     public void close() {
-//        this.connection.close();
         connectionPool.releaseConnection(connection);
         this.connection = null;
         System.out.println("Closed the connection");
@@ -191,5 +180,41 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
         }
         return list;
     }
+
+    List<E> getFromQueryWithString(String string, String sql) {
+        List<E> list;
+        log(sql, "\ngetFromQueryWithId");
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, string);
+            ResultSet rs = statement.executeQuery();
+            list = parseResultSet(rs);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            throw new PersistException(e);
+        }
+        return list;
+    }
+
+    E getUniqueFromString(String string, String sql){
+        List<E> list;
+        log(sql, "LOG SelectByIdQuery");
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1,string);
+            ResultSet rs = statement.executeQuery();
+            list = parseResultSet(rs);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new PersistException(e);
+        }
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        if (list.size() > 1) {
+            throw new PersistException("Received more than one record.");
+        }
+        return list.iterator().next();
+    }
+
 
 }

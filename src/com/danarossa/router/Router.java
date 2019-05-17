@@ -18,6 +18,7 @@ public class Router {
     private Map<String, MyMethod> methods = new HashMap<>();
 
     public Router() {
+        System.out.println("INSIDE OF ROUTER CONSTRUSTOR!!!!");
         final Reflections reflections = new Reflections("com.danarossa.controllers");
         final Set<Class<?>> foundControllers = reflections.getTypesAnnotatedWith(Controller.class);
         for (Class<?> foundController : foundControllers) {
@@ -30,8 +31,8 @@ public class Router {
                     Accessible accessible = method.getAnnotation(Accessible.class);
                     if (annotation1 != null) {
                         Role[] roles = (accessible == null) ? Role.values() : accessible.value();
-                        String servletPath = "/index.php";
-                        String path = servletPath + controllerPath + annotation1.value();
+//                        String servletPath = "/index.php";
+                        String path = controllerPath + annotation1.value();
                         methods.put(path, new MyMethod(controllerInstance, method, roles));
                     }
                 }
@@ -39,6 +40,7 @@ public class Router {
                 e.printStackTrace();
             }
         }
+        System.out.println(methods);
     }
 
     public void call(HttpServletRequest request, HttpServletResponse response) {

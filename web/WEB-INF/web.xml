@@ -4,14 +4,27 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
-<!--    <filter>-->
-<!--        <filter-name>MainFilter</filter-name>-->
-<!--        <filter-class>com.danarossa.MainFilter</filter-class>-->
-<!--    </filter>-->
-<!--    <filter-mapping>-->
-<!--        <filter-name>MainFilter</filter-name>-->
+    <filter>
+        <filter-name>CorsFilter</filter-name>
+        <filter-class>com.danarossa.CORSFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>CorsFilter</filter-name>
+        <servlet-name>HelloServlet</servlet-name>
 <!--        <url-pattern>/*</url-pattern>-->
-<!--    </filter-mapping>-->
+    </filter-mapping>
+
+
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>com.danarossa.auth.AuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <servlet-name>HelloServlet</servlet-name>
+<!--        <url-pattern>/*</url-pattern>-->
+    </filter-mapping>
 
 
     <servlet>
@@ -21,7 +34,7 @@
 
     <servlet-mapping>
         <servlet-name>HelloServlet</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/index.php/*</url-pattern>
     </servlet-mapping>
 
 </web-app>

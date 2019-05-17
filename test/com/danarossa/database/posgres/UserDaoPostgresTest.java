@@ -22,7 +22,7 @@ public class UserDaoPostgresTest {
         AbstractDaoFactory oracleDaoFactory = AbstractDaoFactory.getDaoFactory();
         userDao = oracleDaoFactory.getUserDao();
         System.out.println("instantiated accountDao");
-        testInsertedUser = new User("name", "surname", "email", "password", new Date(5454545), Role.STUDENT);
+        testInsertedUser = new User("name", "surname", "email",  new Date(5454545), Role.STUDENT, "password");
     }
 
     @AfterClass
@@ -90,7 +90,7 @@ public class UserDaoPostgresTest {
         List<User> lecturers = userDao.getAll();
         assertTrue(lecturers.size() > 0);
         int before = lecturers.size();
-        User user = new User("new", "and Damon", "newOne", "new", new Date(2334), Role.STUDENT);
+        User user = new User("new", "and Damon", "newOne",  new Date(2334), Role.STUDENT, "new");
         userDao.insert(user);
         assertNotNull(user.getId());
         Integer newID = user.getId();

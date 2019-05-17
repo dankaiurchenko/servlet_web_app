@@ -49,9 +49,9 @@ public class PostgresDabFactory implements AbstractDaoFactory {
     public static class PostgresConnectionPool {
         private static final int MAX_POOL_SIZE = 30;
         //TODO
+        private static final int INITIAL_POOL_SIZE = 20;
         private final List<Connection> connectionPool = new ArrayList<>(INITIAL_POOL_SIZE);
         private final List<Connection> usedConnections = new ArrayList<>();
-        private static final int INITIAL_POOL_SIZE = 10;
         private final String DATABASE_URL = "jdbc:postgresql://localhost:5432/my_servlet_project";
         private final String DATABASE_USER = "postgres";
         private final String DATABASE_PASSWORD = "djljghjdjl26";

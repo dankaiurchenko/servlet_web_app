@@ -10,4 +10,6 @@ public interface StudentMarkDao extends GenericDao<StudentMark, Integer> {
 
     List<StudentMark> getStudentMarksForStudent(Integer studentId);
 
+    StudentMark getStudentMarkForStudentAndRealizedCourse(Integer studentId, Integer realizedCourseId);
+
 }

@@ -8,30 +8,49 @@
 </template>
 
 <script>
+    import axios from 'axios';
+
     export default {
         name: 'Login',
         data() {
             return {
                 username: "",
-                password: "",
-                mockAccount: {
-                    username: "danarossa",
-                    password: "djljghjdjl"
-                }
+                password: ""
             }
         },
         methods: {
+            successAutoClosable(title) {
+                this.$snotify.success(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
             login() {
+                let self = this;
                 if (this.username != "" && this.password != "") {
-                    if (this.username == this.mockAccount.username && this.password == this.mockAccount.password) {
-                        this.$emit("authenticated", true);
-                        this.$router.replace({name: "home"});
-                        // SET COOKIE TOKEN
-                    } else {
+                    axios.post("/login", {
+                        name: "",
+                        surname: "",
+                        email: this.username,
+                        role: "",
+                        password: this.password
+                    }).then(function (response) {
+                        self.successAutoClosable("you are logged in");
+                        console.log(response.data);
+                        self.$router.replace({name: "home"});
+                        self.$store.commit('token', response.data.token);
+                        self.$store.commit('user', response.data);
+                        axios.defaults.headers.common = {'Authorization': response.data.token};
+                        // self.$store.commit('token', response.data.token);
+                        // self.$store.state.user = response.data;
+                        // self.$store.state.token = self.$store.state.user.token;
+                        self.$emit("authenticated", true);
+                        // self.parent.authenticated = true;
+                    }).catch(function (error) {
                         console.log("The username and / or password is incorrect");
-                    }
-                } else {
-                    console.log("A username and password must be present");
+                    });
                 }
             }
         }
