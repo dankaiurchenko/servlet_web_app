@@ -17,7 +17,6 @@ public class CourseController extends ParentController {
     @Url("/get-all")
     public void all(HttpServletRequest request, HttpServletResponse response) {
         try (CourseDao courseDao = abstractDaoFactory.getCourseDao()) {
-            System.out.println("/get-all");
             writeToResponseBody(courseDao.getAll(), response);
         } catch (Exception e) {
             e.printStackTrace();
@@ -29,9 +28,7 @@ public class CourseController extends ParentController {
     @Accessible({Role.ADMIN, Role.TRAINER})
     public void add(HttpServletRequest request, HttpServletResponse response) {
         try (CourseDao courseDao = abstractDaoFactory.getCourseDao()) {
-            System.out.println("into /new-one");
             String body = getBody(request);
-            System.out.println("user from front    " + body);
             Course courseCourse = gson.fromJson(body, Course.class);
             courseDao.insert(courseCourse);
             writeToResponseBody(courseCourse.getId(), response);
@@ -46,9 +43,7 @@ public class CourseController extends ParentController {
     @Accessible({Role.ADMIN, Role.TRAINER})
     public void edit(HttpServletRequest request, HttpServletResponse response) {
         try (CourseDao courseDao = abstractDaoFactory.getCourseDao()) {
-            System.out.println("into /edit");
             String body = getBody(request);
-            System.out.println("course from front    " + body);
             Course courseCourse = gson.fromJson(body, Course.class);
             courseDao.update(courseCourse);
             writeToResponseBody(courseCourse.getId(), response);

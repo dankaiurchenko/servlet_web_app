@@ -112,7 +112,6 @@ public class UserDaoPostgres extends AbstractGenericDao<User, Integer> implement
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             throw new PersistException(e);
         }
         if (list == null || list.size() == 0) {

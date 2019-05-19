@@ -33,7 +33,7 @@
         mounted() {
             let self = this;
             axios.defaults.headers.common = {'Authorization': this.$store.state.token};
-            axios.post("/auth/logout", this.$store.state.user).then(function (response) {
+            axios.post("/filters/logout", this.$store.state.user).then(function (response) {
                 console.log(response.data);
                 self.$store.commit('token', '');
                 self.$store.commit('user', null);

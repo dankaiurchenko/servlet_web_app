@@ -6,7 +6,7 @@
 
     <filter>
         <filter-name>CorsFilter</filter-name>
-        <filter-class>com.danarossa.CORSFilter</filter-class>
+        <filter-class>com.danarossa.filters.CORSFilter</filter-class>
     </filter>
 
     <filter-mapping>
@@ -18,7 +18,7 @@
 
     <filter>
         <filter-name>AuthFilter</filter-name>
-        <filter-class>com.danarossa.auth.AuthFilter</filter-class>
+        <filter-class>com.danarossa.filters.AuthFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>

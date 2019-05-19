@@ -33,8 +33,6 @@ class ParentController {
         try {
             PrintWriter writer = response.getWriter();
             String x = gson.toJson(object);
-            System.out.println("writing into response body   ");
-            System.out.println(x);
             writer.println(x);
             writer.flush();
             writer.close();

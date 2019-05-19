@@ -11,16 +11,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
-@Controller("/auth")
+@Controller("/filters")
 public class AuthorisationController extends ParentController {
 
     public void login(HttpServletRequest request, HttpServletResponse response) {
         try (UserDao userDao = abstractDaoFactory.getUserDao()) {
-            System.out.println("into login");
             String body = getBody(request);
-            System.out.println("user from front    " + body);
             Account account = gson.fromJson(body, Account.class);
-            System.out.println("account     " + account);
             User userByEmail = userDao.getUserByEmailAndPass(account.getEmail(), account.getPassword());
             if (userByEmail != null) {
                 SecureRandom random = new SecureRandom();
@@ -41,9 +38,7 @@ public class AuthorisationController extends ParentController {
 
     public void register(HttpServletRequest request, HttpServletResponse response) {
         try (UserDao userDao = abstractDaoFactory.getUserDao()) {
-            System.out.println("into register");
             String body = getBody(request);
-            System.out.println("user from front    " + body);
             User newUser = gson.fromJson(body, User.class);
             User userByEmail = userDao.getUserByEmail(newUser.getEmail());
             if (userByEmail == null) {
@@ -79,9 +74,7 @@ public class AuthorisationController extends ParentController {
     @Url("/logout")
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         try (UserDao userDao = abstractDaoFactory.getUserDao()) {
-            System.out.println("into logout");
             String body = getBody(request);
-            System.out.println("user from front    " + body);
             User user = userDao.getUserByToken(gson.fromJson(body, User.class).getToken());
             user.setToken("");
             userDao.update(user);

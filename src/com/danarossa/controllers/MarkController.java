@@ -23,15 +23,6 @@ import java.util.List;
 @Controller("/marks")
 public class MarkController extends ParentController {
 
-    @Url("/get-by-course")
-    public void allOfCourse(HttpServletRequest request, HttpServletResponse response) {
-//        System.out.println("all marks and students of course");
-//        PrintWriter writer = response.getWriter();
-//        writer.println("all marks and students of course");
-//        writer.flush();
-//        writer.close();
-    }
-
     @Url("/all-of-student")
     public void allOfStudent(HttpServletRequest request, HttpServletResponse response) {
         try (StudentMarkDao markDao = abstractDaoFactory.getStudentMarkDao();
@@ -75,9 +66,7 @@ public class MarkController extends ParentController {
     @Accessible({Role.TRAINER})
     public void addMark(HttpServletRequest request, HttpServletResponse response) {
         try (StudentMarkDao markDao = abstractDaoFactory.getStudentMarkDao(); UserDao userDao = abstractDaoFactory.getUserDao()) {
-            System.out.println("into /new-one");
             String body = getBody(request);
-            System.out.println("user from front    " + body);
             DtoMark mark = gson.fromJson(body, DtoMark.class);
             StudentMark studentMark = new StudentMark(
                     userDao.getEntityById(mark.getStudentId()),
@@ -94,9 +83,7 @@ public class MarkController extends ParentController {
     @Accessible({Role.TRAINER, Role.ADMIN})
     public void editMark(HttpServletRequest request, HttpServletResponse response) {
         try (StudentMarkDao markDao = abstractDaoFactory.getStudentMarkDao(); UserDao userDao = abstractDaoFactory.getUserDao()) {
-            System.out.println("into /new-one");
             String body = getBody(request);
-            System.out.println("user from front    " + body);
             DtoMark mark = gson.fromJson(body, DtoMark.class);
             StudentMark studentMark = markDao.getEntityById(mark.getId());
             studentMark.setMark(mark.getMark());
@@ -112,9 +99,7 @@ public class MarkController extends ParentController {
     @Accessible({Role.STUDENT})
     public void joinCourse(HttpServletRequest request, HttpServletResponse response) {
         try (StudentMarkDao markDao = abstractDaoFactory.getStudentMarkDao(); UserDao userDao = abstractDaoFactory.getUserDao()) {
-            System.out.println("into /new-one");
             String body = getBody(request);
-            System.out.println("user from front    " + body);
             DtoMark mark = gson.fromJson(body, DtoMark.class);
             if (mark.getId() == null || mark.getId() == 0) {
                 StudentMark studentMark = new StudentMark(userDao.getEntityById(mark.getStudentId()), mark.getRealizedCourseId(), 0d);

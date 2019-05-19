@@ -68,9 +68,7 @@ public class RealizedCourseController extends ParentController {
     @Url("/new")
     public void createNew(HttpServletRequest request, HttpServletResponse response) {
         try (RealizedCourseDao realizedCourseDao = abstractDaoFactory.getRealizedCourseDao()) {
-            System.out.println("into createNew");
             String body = getBody(request);
-            System.out.println("realized course from front    " + body);
             RealizedCourse realizedCourse = gson.fromJson(body, RealizedCourse.class);
             realizedCourseDao.insert(realizedCourse);
             writeToResponseBody(realizedCourse.getId(), response);
@@ -83,9 +81,7 @@ public class RealizedCourseController extends ParentController {
     @Url("/edit")
     public void edit(HttpServletRequest request, HttpServletResponse response) {
         try (RealizedCourseDao realizedCourseDao = abstractDaoFactory.getRealizedCourseDao()) {
-            System.out.println("into edit");
             String body = getBody(request);
-            System.out.println("realized course from front    " + body);
             RealizedCourse realizedCourse = gson.fromJson(body, RealizedCourse.class);
             realizedCourseDao.update(realizedCourse);
             writeToResponseBody(realizedCourse.getId(), response);

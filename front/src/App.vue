@@ -72,7 +72,7 @@
             },
             logout() {
                 let self = this;
-                axios.post("/auth/logout", this.$store.state.user).then(function (response) {
+                axios.post("/filters/logout", this.$store.state.user).then(function (response) {
                     console.log(response.data);
                     self.$store.commit('token', '');
                     self.$store.commit('user', null);

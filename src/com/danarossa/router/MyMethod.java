@@ -23,7 +23,6 @@ class MyMethod {
 
     void call(HttpServletRequest request, HttpServletResponse response, User user) {
         try {
-            System.out.println("Calling " + method.getName());
             if (roles.contains(user.getRole()))
                 this.method.invoke(controller, request, response);
             else response.sendError(response.SC_BAD_REQUEST, "important_parameter needed");

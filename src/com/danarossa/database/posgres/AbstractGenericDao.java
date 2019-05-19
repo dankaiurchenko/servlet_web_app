@@ -47,7 +47,6 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             e.printStackTrace();
             throw new PersistException(e);
         }
@@ -64,7 +63,6 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             throw new PersistException(e);
         }
         if (list == null || list.size() == 0) {
@@ -108,7 +106,6 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
                 throw new PersistException("On delete modify more then 1 record: " + count);
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             throw new PersistException(e);
         }
     }
@@ -124,7 +121,6 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
             prepareStatementForInsert(statement, entity);
             entity.setId(parseResultSetForPrimaryKey(statement.executeQuery()));
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             e.printStackTrace();
             throw new PersistException(e);
         }
@@ -133,7 +129,6 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
     public void close() {
         connectionPool.releaseConnection(connection);
         this.connection = null;
-        System.out.println("Closed the connection");
     }
 
     private String getSelectByIdQuery() {
@@ -174,7 +169,6 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             e.printStackTrace();
             throw new PersistException(e);
         }
@@ -189,7 +183,6 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             e.printStackTrace();
             throw new PersistException(e);
         }
@@ -204,7 +197,6 @@ public abstract class AbstractGenericDao<E extends Entity<K>, K> implements Gene
             ResultSet rs = statement.executeQuery();
             list = parseResultSet(rs);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             throw new PersistException(e);
         }
         if (list == null || list.size() == 0) {

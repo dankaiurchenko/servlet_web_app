@@ -19,7 +19,6 @@ public class Router {
     private Map<String, MyMethod> methods = new HashMap<>();
 
     public Router() {
-        System.out.println("INSIDE OF ROUTER CONSTRUSTOR!!!!");
         final Reflections reflections = new Reflections("com.danarossa.controllers");
         final Set<Class<?>> foundControllers = reflections.getTypesAnnotatedWith(Controller.class);
         for (Class<?> foundController : foundControllers) {
@@ -41,13 +40,11 @@ public class Router {
                 e.printStackTrace();
             }
         }
-        System.out.println(methods);
     }
 
     public void call(HttpServletRequest request, HttpServletResponse response) {
         User user = authorisationController.getUser(request);
         final String path = request.getPathInfo();
-        System.out.println("path   " + path);
         if(methods.containsKey(path)){
             methods.get(path).call(request, response, user);
         }else throw new ControllerException("No pattern is found     " + path);

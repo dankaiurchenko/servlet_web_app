@@ -34,9 +34,7 @@ public class UserController extends ParentController {
     @Accessible(Role.ADMIN)
     public void add(HttpServletRequest request, HttpServletResponse response) {
         try (UserDao userDao = abstractDaoFactory.getUserDao()) {
-            System.out.println("into /new-one");
             String body = getBody(request);
-            System.out.println("user from front    " + body);
             User newUser = gson.fromJson(body, User.class);
             User userByEmail = userDao.getUserByEmail(newUser.getEmail());
             if (userByEmail == null) {
