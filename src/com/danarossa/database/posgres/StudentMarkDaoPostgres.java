@@ -25,18 +25,18 @@ public class StudentMarkDaoPostgres extends AbstractGenericDao<StudentMark, Inte
 
     @Override
     protected void prepareStatementForInsert(PreparedStatement statement, StudentMark entity) throws SQLException {
-        setFields(statement, entity, 1);
+        setFields(statement, entity);
     }
 
-    private void setFields(PreparedStatement statement, StudentMark entity, int startIndex) throws SQLException {
-        statement.setInt(startIndex, entity.getStudentId());
-        statement.setInt(startIndex + 1, entity.getRealizedCourseId());
-        statement.setDouble(startIndex + 2, entity.getMark());
+    private void setFields(PreparedStatement statement, StudentMark entity) throws SQLException {
+        statement.setInt(1, entity.getStudent().getId());
+        statement.setInt(2, entity.getRealizedCourseId());
+        statement.setDouble(3, entity.getMark());
     }
 
     @Override
     protected void prepareStatementForUpdate(PreparedStatement statement, StudentMark entity) throws SQLException {
-        setFields(statement, entity, 1);
+        setFields(statement, entity);
         statement.setInt(4, entity.getId());
     }
 

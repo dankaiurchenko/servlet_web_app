@@ -1,6 +1,9 @@
 package com.danarossa.controllers;
 
+import com.danarossa.database.daointerfaces.StudentMarkDao;
 import com.danarossa.database.daointerfaces.UserDao;
+import com.danarossa.dto.DtoMark;
+import com.danarossa.dto.StudentWithMark;
 import com.danarossa.entities.User;
 import com.danarossa.router.Accessible;
 import com.danarossa.router.Controller;
@@ -9,10 +12,13 @@ import com.danarossa.router.Url;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Controller("/users")
 public class UserController extends ParentController {
+
     @Url("/get-all")
     @Accessible({Role.ADMIN})
     public void all(HttpServletRequest request, HttpServletResponse response) {
@@ -56,9 +62,15 @@ public class UserController extends ParentController {
 
     @Url("/get-by-course")
     public void allOfCourse(HttpServletRequest request, HttpServletResponse response) {
-        try (UserDao userDao = abstractDaoFactory.getUserDao()) {
+        try (UserDao userDao = abstractDaoFactory.getUserDao(); StudentMarkDao studentMarkDao = abstractDaoFactory.getStudentMarkDao()) {
             int realizedCourseId = Integer.parseInt(request.getParameter("realizedCourseId"));
-            writeToResponseBody(userDao.getAllStudentsOfRealizedCourse(realizedCourseId), response);
+            List<User> allStudentsOfRealizedCourse = userDao.getAllStudentsOfRealizedCourse(realizedCourseId);
+            List<StudentWithMark> studentWithMarks = new ArrayList<>();
+            for (User user : allStudentsOfRealizedCourse) {
+                DtoMark dtoMark = new DtoMark(studentMarkDao.getStudentMarkForStudentAndRealizedCourse(user.getId(), realizedCourseId));
+                studentWithMarks.add(new StudentWithMark(user, dtoMark));
+            }
+            writeToResponseBody(studentWithMarks, response);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ControllerException("cant get all students");

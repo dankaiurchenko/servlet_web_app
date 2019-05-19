@@ -34,6 +34,15 @@
                                 </v-list-tile-content>
                             </v-list-tile>
 
+                            <v-list-tile>
+                                <v-list-tile-content>
+                                    <v-list-tile-title><span class="grey--text">Date joined :</span>
+                                        <span class="font-weight-medium" v-if="user.dateEntered != undefined">
+                                        {{user.dateEntered.slice(0, 12)}}
+                                        </span></v-list-tile-title>
+                                </v-list-tile-content>
+                            </v-list-tile>
+
                             <v-list-tile v-if="user.role == 'STUDENT'">
                                 <v-list-tile-content>
                                     <v-list-tile-title><span class="grey--text">Teachers :</span>
@@ -45,7 +54,7 @@
                                 </v-list-tile-content>
                             </v-list-tile>
 
-                            <v-list-tile>
+                            <v-list-tile v-if="user.role != 'ADMIN'">
                                 <v-list-tile-content>
                                     <v-list-tile-title><span class="grey--text">Courses :</span>
                                         <span v-if="courses.length < 1">No courses yet</span>
@@ -58,7 +67,7 @@
                     </v-flex>
                 </v-layout>
             </div>
-            <realized-courses-table :realized-courses="realized"></realized-courses-table>
+            <realized-courses-table v-if="user.role != 'ADMIN'" :realized-courses="realized"></realized-courses-table>
         </v-container>
     </v-layout>
 </template>

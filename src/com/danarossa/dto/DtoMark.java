@@ -1,40 +1,23 @@
 package com.danarossa.dto;
 
+import com.danarossa.entities.StudentMark;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class DtoMark {
+    private Integer id;
     private Integer studentId;
     private Integer realizedCourseId;
     private Double mark;
 
-    public DtoMark() {
-    }
-
-    public DtoMark(Integer studentId, Integer realizedCourseId, Double mark) {
-        this.studentId = studentId;
-        this.realizedCourseId = realizedCourseId;
-        this.mark = mark;
-    }
-
-    public Integer getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(Integer studentId) {
-        this.studentId = studentId;
-    }
-
-    public Integer getRealizedCourseId() {
-        return realizedCourseId;
-    }
-
-    public void setRealizedCourseId(Integer realizedCourseId) {
-        this.realizedCourseId = realizedCourseId;
-    }
-
-    public Double getMark() {
-        return mark;
-    }
-
-    public void setMark(Double mark) {
-        this.mark = mark;
+    public DtoMark(StudentMark studentMark) {
+        this.id = studentMark.getId();
+        this.studentId = studentMark.getStudent().getId();
+        this.realizedCourseId = studentMark.getRealizedCourseId();
+        this.mark = studentMark.getMark();
     }
 }

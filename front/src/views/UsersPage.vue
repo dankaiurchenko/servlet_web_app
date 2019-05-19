@@ -1,7 +1,9 @@
 <template>
     <v-container>
-        <h1>ALL USERS</h1>
-        <user-table :users="users"></user-table>
+        <v-layout style="margin-bottom: 50px; margin-top: 20px;">
+            <h1>ALL USERS</h1>
+        </v-layout>
+        <user-table :key="users.length" :users="users"></user-table>
     </v-container>
 </template>
 
@@ -14,20 +16,22 @@
         components: {UserTable},
         data: function () {
             return {
+                childDataLoaded: false,
                 users: []
             }
         },
         mounted() {
+            let self = this;
             axios.defaults.baseURL = 'http://localhost:8081/app/index.php';
             axios.defaults.headers.common = {'Authorization': this.$store.state.token};
-            if (this.$store.state.user.role == 'ADMIN') {
-                axios.get('/users/get-all').then(function (response) {
-                    self.users = response.data;
-                    console.log(response);
-                }).catch(function (error) {
-                    console.log(error);
-                })
-            }
+            axios.get('/users/get-all').then(function (response) {
+                self.users = response.data;
+                console.log(response);
+                self.childDataLoaded = true;
+            }).catch(function (error) {
+                console.log(error);
+            })
+
         }
     }
 </script>

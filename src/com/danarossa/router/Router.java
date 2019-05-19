@@ -1,6 +1,7 @@
 package com.danarossa.router;
 
 import com.danarossa.controllers.AuthorisationController;
+import com.danarossa.controllers.ControllerException;
 import com.danarossa.entities.User;
 import org.reflections.Reflections;
 
@@ -47,11 +48,14 @@ public class Router {
         User user = authorisationController.getUser(request);
         final String path = request.getPathInfo();
         System.out.println("path   " + path);
-        methods.forEach((key, value) -> {
-            if (path.matches(key)) {
-                value.call(request, response, user);
-            }
-        });
+        if(methods.containsKey(path)){
+            methods.get(path).call(request, response, user);
+        }else throw new ControllerException("No pattern is found     " + path);
+//        methods.forEach((key, value) -> {
+//            if (path.matches(key)) {
+//                value.call(request, response, user);
+//            }
+//        });
     }
 
 }

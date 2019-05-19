@@ -1,6 +1,6 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <v-container>
-        <v-layout style="margin-bottom: 50px; margin-top: 70px;">
+        <v-layout style="margin-bottom: 50px; margin-top: 20px;">
             <h1 >All courses</h1>
             <v-spacer></v-spacer>
             <v-btn v-if="canCreate()">New one</v-btn>

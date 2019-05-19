@@ -1,7 +1,12 @@
 package com.danarossa.entities;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import java.io.Serializable;
 
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class StudentMark extends Entity<Integer> implements Serializable {
 
     private User student;
@@ -19,31 +24,5 @@ public class StudentMark extends Entity<Integer> implements Serializable {
         this.student = student;
         this.realizedCourseId = realizedCourse;
         this.mark = mark;
-    }
-
-    public Double getMark() {
-        return mark;
-    }
-
-    public Integer getStudentId() {
-        return student.getId();
-    }
-
-    public User getStudent() {
-        return student;
-    }
-
-    public Integer getRealizedCourseId() {
-        return realizedCourseId;
-    }
-
-    @Override
-    public String toString() {
-        return "StudentMark{" +
-                "student=" + student +
-                ", realizedCourseId=" + realizedCourseId +
-                ", mark=" + mark +
-                ", id=" + id +
-                '}';
     }
 }

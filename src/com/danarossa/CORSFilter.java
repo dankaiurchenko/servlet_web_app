@@ -12,6 +12,11 @@ import java.io.IOException;
 /* @ WebFilter(asyncSupported = true, urlPatterns = { "/*" }) */
 public class CORSFilter implements Filter {
 
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+
+    }
+
     /**
      * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
      */
@@ -23,7 +28,7 @@ public class CORSFilter implements Filter {
 
         // Authorize (allow) all domains to consume the content
         ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Origin", "http://localhost:8080");
-        ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Methods","GET, OPTIONS, HEAD, PUT, POST");
+        ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Methods","GET, POST, PATCH, PUT, DELETE, OPTIONS");
         ((HttpServletResponse) servletResponse).addHeader("Access-Control-Allow-Headers","authorization, token, Accept, Accept-Language, Content-Language, Content-Type");
 
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
@@ -36,6 +41,11 @@ public class CORSFilter implements Filter {
 
         // pass the request along the filter chain
         chain.doFilter(request, servletResponse);
+    }
+
+    @Override
+    public void destroy() {
+
     }
 
 

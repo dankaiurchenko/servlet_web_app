@@ -5,7 +5,7 @@
                 SCHOOL
             </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-menu offset-y>
+            <v-menu  v-if="authenticated" offset-y>
                 <template v-slot:activator="{ on }">
                     <v-btn
                             color="primary"
@@ -26,7 +26,7 @@
                 </v-list>
             </v-menu>
             <v-divider vertical></v-divider>
-            <v-btn v-if="authenticated"  v-on:click.native="logout()" >Logout</v-btn>
+            <v-btn v-if="authenticated" v-on:click.native="logout()">Logout</v-btn>
         </v-toolbar>
         <v-content>
             <router-view @authenticated="setAuthenticated"></router-view>
@@ -49,18 +49,11 @@
                 this.$router.replace({name: "login"});
             }
         },
-        data: function(){
-            return{
-                items: [
-                    { title: 'Users', address: '/users' },
-                    { title: 'Courses', address: '/courses'  },
-                    { title: 'Archive', address: '/archive'  },
-                    { title: 'My Page' , address: '/users/' + this.$store.state.user.id }
-                ]
-            }
+        data: function () {
+            return {}
         },
         methods: {
-            goto(address){
+            goto(address) {
                 this.$router.push(address);
             },
             successAutoClosable(title) {
@@ -101,6 +94,16 @@
                 console.log(this.$store.state.authenticated);
                 return this.$store.state.authenticated;
 
+            },
+            items() {
+                let a = [
+                    {title: 'Users', address: '/users'},
+                    {title: 'Courses', address: '/courses'},
+                    {title: 'Archive', address: '/archive'}
+                ];
+                if (this.$store.state.user != null)
+                    a.push({title: 'My Page', address: '/users/' + this.$store.state.user.id});
+                return a
             }
         }
     }

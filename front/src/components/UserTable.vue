@@ -1,6 +1,6 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <v-layout style="width: 100%">
-        <v-data-table
+        <v-data-table v-if="users.length > 0"
                 :items="users"
                 class="elevation-1"
                 hide-actions
@@ -29,7 +29,7 @@
                     {text: 'Name', align: 'left', value: 'name'},
                     {text: 'Surname', align: 'right', value: 'surname'},
                     {text: 'email', align: 'right', value: 'email'},
-                    {text: 'dateEntered', align: 'right', value: 'dateEntered'},
+                    {text: 'Mark', align: 'right', value: 'mark'},
                 ]
             }
         }

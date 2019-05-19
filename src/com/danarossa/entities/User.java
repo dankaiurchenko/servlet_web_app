@@ -3,9 +3,11 @@ package com.danarossa.entities;
 import com.danarossa.router.Role;
 import com.google.gson.annotations.Expose;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class User extends Entity<Integer> {
     private String name;
@@ -47,59 +49,4 @@ public class User extends Entity<Integer> {
     }
 
 
-    public String getName() {
-        return name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public Date getDateEntered() {
-        return dateEntered;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setDateEntered(Date dateEntered) {
-        this.dateEntered = dateEntered;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
 }

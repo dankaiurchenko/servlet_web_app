@@ -1,58 +1,66 @@
 <template>
     <v-container>
+        <v-toolbar flat>
+            <v-toolbar-title v-on:click="$router.push('/courses/' +realizedCourse.courseId )" class="cursor">
+                <span class="grey--text">Course title :</span>
+                <span class="font-weight-medium">{{course.title}}</span>
+            </v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-items v-if="$store.state.user.role == 'ADMIN' || $store.state.user.id == course.lecturerId">
+                <v-btn flat icon v-on:click="editRealizedCourse()">
+                    <v-icon>edit</v-icon>
+                </v-btn>
+            </v-toolbar-items>
+        </v-toolbar>
         <v-layout style="width: 100%; margin-bottom: 50px">
             <v-list two-line style="width: 100%">
-                <v-list-tile class="wid cursor" v-on:click="$router.push('/courses/' +realizedCourse.courseId )">
+                <v-list-tile class="wid">
                     <v-list-tile-content>
-                        <v-list-tile-title><span class="grey--text">Course title :</span> <span
-                                class="font-weight-medium">{{course.title}}</span></v-list-tile-title>
+                        <v-list-tile-title><span class="grey--text">Start Date :</span> <span
+                                class="font-weight-medium" v-if="realizedCourse.startDate != undefined">
+                            {{realizedCourse.startDate.slice(0, 12)}}</span></v-list-tile-title>
                     </v-list-tile-content>
                 </v-list-tile>
                 <v-list-tile class="wid">
                     <v-list-tile-content>
-                        <v-list-tile-title><span class="grey--text">startDate :</span> <span
-                                class="font-weight-medium">{{realizedCourse.startDate}}</span></v-list-tile-title>
-                    </v-list-tile-content>
-                </v-list-tile>
-                <v-list-tile class="wid">
-                    <v-list-tile-content>
-                        <v-list-tile-title><span class="grey--text">examDate :</span> <span
-                                class="font-weight-medium">{{realizedCourse.examDate}}</span></v-list-tile-title>
+                        <v-list-tile-title><span class="grey--text">Exam Date :</span> <span
+                                class="font-weight-medium" v-if="realizedCourse.examDate != undefined">
+                            {{realizedCourse.examDate.slice(0, 12)}}</span></v-list-tile-title>
                     </v-list-tile-content>
                 </v-list-tile>
 
                 <v-list-tile class="wid">
                     <v-list-tile-content>
-                        <v-list-tile-title><span class="grey--text">status :</span> <span
+                        <v-list-tile-title><span class="grey--text">Status :</span> <span
                                 class="font-weight-medium">{{realizedCourse.status}}</span></v-list-tile-title>
                     </v-list-tile-content>
                 </v-list-tile>
 
-                <v-list-tile class="wid cursor" v-on:click="$router.push('/users/' + course.lecturerId)">
+                <v-list-tile class="wid">
                     <v-list-tile-content>
-                        <v-list-tile-title><span class="grey--text">number of students :</span> <span
+                        <v-list-tile-title><span class="grey--text">Number of students :</span> <span
                                 class="font-weight-medium">{{users.length}}</span></v-list-tile-title>
                     </v-list-tile-content>
                 </v-list-tile>
             </v-list>
         </v-layout>
         <h1>List of students</h1>
-        <user-table :users="users"></user-table>
+        <student-table-with-marks :users="users" :trainer-id="course.lecturerId"></student-table-with-marks>
     </v-container>
 </template>
 
 <script>
-    import UserTable from "../components/UserTable.vue";
     import axios from "axios";
+    import StudentTableWithMarks from "../components/StudentTableWithMarks.vue";
 
     export default {
         name: "RealizedCoursePage",
-        components: {UserTable},
+        components: {StudentTableWithMarks},
         data: function () {
-            return{
+            return {
                 users: [],
                 realizedCourse: {},
-                course : []
+                course: []
             }
         },
         mounted() {
@@ -91,6 +99,11 @@
             }).catch(function (error) {
                 console.log(error);
             })
+        },
+        methods: {
+            editRealizedCourse() {
+
+            }
         }
     }
 </script>

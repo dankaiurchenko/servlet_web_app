@@ -67,5 +67,23 @@ public class MarkController extends ParentController {
         }
     }
 
+    @Url("/set-for-student-and-course")
+    @Accessible({Role.TRAINER, Role.ADMIN})
+    public void editMark(HttpServletRequest request, HttpServletResponse response) {
+        try (StudentMarkDao markDao = abstractDaoFactory.getStudentMarkDao(); UserDao userDao = abstractDaoFactory.getUserDao()) {
+            System.out.println("into /new-one");
+            String body = getBody(request);
+            System.out.println("user from front    " + body);
+            DtoMark mark = gson.fromJson(body, DtoMark.class);
+            StudentMark studentMark = markDao.getEntityById(mark.getId());
+            studentMark.setMark(mark.getMark());
+            markDao.update(studentMark);
+            writeToResponseBody(studentMark.getId(), response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ControllerException("cant get mark of student for realized course");
+        }
+    }
+
 
 }
