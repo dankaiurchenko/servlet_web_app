@@ -82,4 +82,9 @@ public class CourseDaoPostgres extends AbstractGenericDao<Course, Integer> imple
         return getFromQueryWithId(studentId, sql);
     }
 
+    @Override
+    public Course getByRealized(Integer realizedCourseId) {
+        String sql = sqlQueries.getProperty("select.of.realized.course");
+        return getFromQueryWithId(realizedCourseId, sql).get(0);
+    }
 }

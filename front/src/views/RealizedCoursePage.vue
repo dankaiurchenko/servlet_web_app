@@ -7,6 +7,7 @@
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items v-if="$store.state.user.role == 'ADMIN' || $store.state.user.id == course.lecturerId">
+                <v-btn v-if="canJoin()" color="success" v-on:click="joinCourse()">Join</v-btn>
                 <v-btn flat icon v-on:click="editRealizedCourse()">
                     <v-icon>edit</v-icon>
                 </v-btn>
@@ -64,45 +65,86 @@
             }
         },
         mounted() {
-            axios.defaults.headers.common = {'Authorization': this.$store.state.token};
-            let self = this;
-            axios.get('/realized-courses/get-by-id',
-                {
-                    params: {
-                        realizedCourseId: this.$route.params.id
-                    }
-                }).then(function (response) {
-                self.realizedCourse = response.data;
-                console.log(response);
-                axios.get('/courses/get-by-id',
+          this.loadInfo();
+        },
+        methods: {
+            loadInfo(){
+                axios.defaults.headers.common = {'Authorization': this.$store.state.token};
+                let self = this;
+                axios.get('/realized-courses/get-by-id',
                     {
                         params: {
-                            courseId: self.realizedCourse.courseId
+                            realizedCourseId: this.$route.params.id
                         }
                     }).then(function (response) {
-                    self.course = response.data;
+                    self.realizedCourse = response.data;
                     console.log(response);
+                    axios.get('/courses/get-by-id',
+                        {
+                            params: {
+                                courseId: self.realizedCourse.courseId
+                            }
+                        }).then(function (response) {
+                        self.course = response.data;
+                        console.log(response);
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
                 }).catch(function (error) {
                     console.log(error);
                 });
-            }).catch(function (error) {
-                console.log(error);
-            });
-            axios.get('/users/get-by-course',
-                {
-                    params: {
-                        realizedCourseId: this.$route.params.id
-                    }
-                }).then(function (response) {
-                self.users = response.data;
-                console.log(response);
-            }).catch(function (error) {
-                console.log(error);
-            })
-        },
-        methods: {
+                axios.get('/users/get-by-course',
+                    {
+                        params: {
+                            realizedCourseId: this.$route.params.id
+                        }
+                    }).then(function (response) {
+                    self.users = response.data;
+                    console.log(response);
+                }).catch(function (error) {
+                    console.log(error);
+                })
+            },
+            successAutoClosable(title) {
+                this.$snotify.success(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
+            errorAutoClosable(title) {
+                this.$snotify.error(title, {
+                    timeout: 2000,
+                    showProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true
+                });
+            },
             editRealizedCourse() {
-
+            },
+            canJoin() {
+                return this.$store.state.user.role == 'STUDENT' &&
+                    this.users.filter(function (e) {
+                        return e.studentent.id == this.$store.state.user.id
+                    }).length == 0;
+            },
+            joinCourse() {
+                let self = this;
+                axios.put('/marks/join',
+                    {
+                        id: 0,
+                        studentId: this.$store.state.user.id,
+                        realizedCourseId: this.$route.params.id,
+                        mark: 0
+                    }).then(function (response) {
+                    self.loadInfo();
+                    self.successAutoClosable("You joined the course!");
+                    console.log(response);
+                }).catch(function (error) {
+                    console.log(error);
+                    self.errorAutoClosable("Error occurred");
+                });
             }
         }
     }

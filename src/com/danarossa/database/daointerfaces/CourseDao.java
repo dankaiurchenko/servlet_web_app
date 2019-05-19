@@ -10,5 +10,7 @@ public interface CourseDao extends GenericDao<Course, Integer> {
 
     List<Course> getAllCoursesOfStudent(Integer studentId);
 
+    Course getByRealized(Integer realizedCourseId);
+
 
 }

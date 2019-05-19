@@ -42,6 +42,23 @@ public class CourseController extends ParentController {
 
     }
 
+    @Url("/edit")
+    @Accessible({Role.ADMIN, Role.TRAINER})
+    public void edit(HttpServletRequest request, HttpServletResponse response) {
+        try (CourseDao courseDao = abstractDaoFactory.getCourseDao()) {
+            System.out.println("into /edit");
+            String body = getBody(request);
+            System.out.println("course from front    " + body);
+            Course courseCourse = gson.fromJson(body, Course.class);
+            courseDao.update(courseCourse);
+            writeToResponseBody(courseCourse.getId(), response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ControllerException("Error while inserting the course");
+        }
+
+    }
+
     @Url("/get-by-student")
     public void allOfStudent(HttpServletRequest request, HttpServletResponse response) {
         try (CourseDao courseDao = abstractDaoFactory.getCourseDao()) {
